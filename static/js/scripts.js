@@ -1,0 +1,1 @@
+//alert("This alert shows that the js file is linked to base.html")
