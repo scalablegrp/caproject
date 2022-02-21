@@ -1,0 +1,12 @@
+{% extends 'base.html' %} {% block page_title %}Login{% endblock %} {% block content %}
+<div class="formIconContainer">
+    <i class="fas fa-user"></i>
+    <h1>Login</h1>
+</div>
+<form method="post" class = "authForm">
+    {% csrf_token %} {% for field in form %} {{field.label_tag}}
+    {{ field }}
+    {% endfor %}
+    <button type="submit" class="btn btn-success">Login</button>
+</form>
+{% endblock content %}

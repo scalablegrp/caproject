@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import dj_database_url
 # Import the file that has the environment variables
 if os.path.exists("env.py"):
     import env as env_variables
@@ -45,7 +46,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storages',
     'home',
+    'user_auth',
+    'property',
 ]
 
 MIDDLEWARE = [
@@ -81,15 +85,30 @@ WSGI_APPLICATION = 'project_config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if os.path.exists("env.py"):
+    print("Using hosted db")
+    DATABASES = {
+        'default':  dj_database_url.parse(env_variables.get_db_url())
     }
-}
+# else:
+#     try:
+#         print("Using hosted db")
+#         DATABASES = {
+#             'default':  dj_database_url.parse(os.environ.get('db_url'))
+#         }
+#     except:
+#         DATABASES = {
+#             'default': {
+#                'ENGINE': 'django.db.backends.sqlite3',
+#                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#             }
+#         }
 
-
+# Set the custom user model as the authentication model
+AUTH_USER_MODEL = "user_auth.CustomUser"
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+)
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -120,7 +139,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False  # This may need to be changed
 
 
 # Static files (CSS, JavaScript, Images)
@@ -130,3 +149,12 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# S3 Details Retrieved from environment variables
+if os.path.exists("env.py"):
+    AWS_ACCESS_KEY_ID = env_variables.get_aws_access_key()
+    AWS_SECRET_ACCESS_KEY = env_variables.get_aws_secret_key()
+    AWS_STORAGE_BUCKET_NAME = env_variables.get_bucket_name()
+    IMAGE_BUCKET_URL = env_variables.get_instrument_image_url() 
+    PROPERTY_IMAGE_PATH = f"https://{IMAGE_BUCKET_URL}/" 
