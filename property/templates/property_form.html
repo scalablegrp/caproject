@@ -1,0 +1,95 @@
+{% extends 'base.html' %} {% block page_title %}Add Product{% endblock %} {% block content %}
+<div class="formIconContainer">
+    <!--Determine if the form is to be used for editing or adding a property-->
+    {% if edit %}
+        <i class="fas fa-edit"></i>
+        <p>Edit the existing details</p>
+        <h1>Proprty Name</h1>
+        {% else %}
+        <i class="far fa-play-circle"></i>
+        <p>Submit form below to post a property</p>
+        <h1>List New Property</h1>
+    {% endif %}
+</div>
+<div class="container-fluid">
+    <form method="post" id="propertyForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if edit %}<input type = "hidden" name = "property_id" value = {{property.id}}> {% endif %}
+        <div class="row">
+            <div class="col-sm-12">
+                <!--Fieldset for the property address-->
+                <fieldset>
+                    <legend>Property Address</legend>
+                    <div class="form-group">
+                        <label for="house_number">House Number/Name: </label>
+                        <input type="text" name="house_number" id="house_number">
+                    </div>
+                    <div class="form-group">
+                        <label for="street">Street: </label>
+                        <input type="text" name="street" id="street">
+                    </div>
+                    <div class="form-group">
+                        <label for="town">Town: </label>
+                        <input type="text" name="town" id="town">
+                    </div>
+                    <div class="form-group">
+                        <label for="county">County: </label>
+                        <input type="text" name="county" id="county">
+                    </div>
+                    <div class="form-group">
+                        <label for="post_code">PostCode: </label>
+                        <input type="text" name="post_code" id="post_code">
+                    </div>
+                </fieldset>
+                <!--Fieldset for the property details-->
+                <fieldset>
+                    <legend>Additional Details</legend>
+                    <!--Input for the property type -->
+                    <div class="form-group">
+                        <label for="type">Property Type:</label>
+                        <select class="selectpicker" data-live-search="true" name="property_type" required>
+                            <!--Display all property types in the database-->
+                            {% for type in property_types %}
+                                <option value = "{{ type.id }}">{{ type.property_type }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="build_year">Build Year: </label>
+                        <input type="number" name="build_year" id="build_year" min = "1900" max = "2022" step = "1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Minimum Price: </label>
+                        <input type="number" name="price" id="price" min = "0" step = ".01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="footage">Square Footage: </label>
+                        <input type="number" name="footage" id="footage" min = "0" step = ".01">
+                    </div>
+                    <div class="form-group">
+                        <label for="bathroom_amount">Bathroom Amount </label>
+                        <input type="number" name="bathroom_amount" id="bathroom_amount" step = "1">
+                    </div>
+                    <div class="form-group">
+                        <label for="bedroom_amount">Bedroom Amount </label>
+                        <input type="number" name="bedroom_amount" id="bedroom_amount" step = "1">
+                    </div>
+                    <div class="form-group">
+                        <label for="bid_end">BidEnd: </label>
+                        <input type="datetime-local" name="bid_end" id="bid_end">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description: </label>
+                        <textarea name="description" id="description" cols="30" rows="10"></textarea>
+                    </div>
+                </fieldset>
+                <!--Input for the property image-->
+                <div class="form-group">
+                    <label for="image">Upload picture</label>
+                    <input type="file" name="image" placeholder="Upload" multiple="multiple"/>
+                </div>
+            </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+</div>
+{% endblock content %}

@@ -32,8 +32,13 @@
 				<li class="nav-item">
 					<a class="nav-link active" aria-current="page" href="">Home</a>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link active" aria-current="page" href="">View Products</a>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Properties</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="{% url 'property:view_properties' %}"">View All</a>
+						<a class="dropdown-item" href="">View Post</a>
+						<a class="dropdown-item" href="{% url 'property:property_form' %}">Post New</a>
+					</div>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link active" aria-current="page" href="">My Bids</a>
@@ -68,23 +73,23 @@
                             -->
 						</a>
 					</li>
-				<!--if user is logged in, display heading to logout otherwise display headings to login and register
+				<!--if user is logged in, display heading to logout otherwise display headings to login and register-->
 				{% if user.is_authenticated %}
 				<li class="nav-item">
 					<a class="nav-link" href="{% url 'logout' %}">
 						<i class="fas fa-sign-out-alt"></i>Logout</a>
 				</li>
-				{% else %}-->
+				{% else %}
 				<li class="nav-item">
-					<a class="nav-link" href="">
+					<a class="nav-link" href="{% url 'login_form' %}">
 						<i class="fas fa-sign-in-alt"></i>
 						Login</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="">
+					<a class="nav-link" href="{% url 'registration_form' %}">
 						<i class="fas fa-user-plus"></i>Register</a>
 				</li>
-				<!--{% endif %}-->
+				{% endif %}
 			</ul>
 		</div>
 	</nav>

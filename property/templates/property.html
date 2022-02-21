@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block page_title %}Listed Properties{% endblock %}
+{% block content %}
+<!--Font awesome icon above house listings-->
+<div class="banner_image">
+    <i class="far fa-eye"></i>
+    <h1>View Property</h1>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <h1>{{ property.address.house_number}} {{property.address.street}}</h1>
+    </div>
+</div>
+{% endblock content %}

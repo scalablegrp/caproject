@@ -1,0 +1,36 @@
+{% extends 'base.html' %} {% block page_title %}Register{% endblock %} {% block content %}
+<div class="formIconContainer">
+    <i class="fas fa-user-plus"></i>
+    <p>Submit form below to register</p>
+    <h1>Register Account</h1>
+</div>
+<form method="post" id="registrationForm" class = "authForm" >
+     {% csrf_token %}
+    <!-- First name -->
+    <div class="form-group">
+        <label for="f_name"><b>First Name</b></label>
+        <input type="text" class="form-control" name="f_name" placeholder="Your first name" required>
+    </div>
+    <!-- Last name -->
+    <div class="form-group">
+        <label for="l_name"><b> Last Name </b></label>
+        <input type="text" class="form-control" name="l_name" placeholder="Your last name" required>
+    </div>
+    <!--Email-->
+    <div class="form-group">
+        <label for="email"><b>Email</b></label>
+        <input type="email" class="form-control" name="email" placeholder="Your email address" required>
+    </div>
+    <!--Password-->
+    <div class="form-group">
+        <label for="password"><b>Password</b></label>
+        <input type="password" class="form-control" name="password" placeholder="Create a password" required>
+    </div>
+    <!--Password Confirm-->
+    <div class="form-group">
+        <label for="password_confirm"><b>Confirm Password</b></label>
+        <input type="password" class="form-control" name="password_confirm" placeholder="Confirm your password" required>
+    </div>
+    <button class = "btn btn-success" type="submit">Sign Up</button>
+</form>
+{% endblock content %}
