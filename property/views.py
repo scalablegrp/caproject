@@ -38,7 +38,10 @@ def property_form(request):
 # View all listed properties
 def view_properties(request):
     try:
-        return render(request, "properties.html", {'properties': Property.objects.all(), 'bucket': settings.IMAGE_BUCKET_URL})
+        properties = Property.objects.all()
+        if not properties.exists():
+            messages.info(request, "No properties in Database")
+        return render(request, "properties.html", {'properties': properties, 'bucket': settings.IMAGE_BUCKET_URL})
     except:
         messages.error(request, "Unable to retrieve property listings")
         return render(request, "properties.html")

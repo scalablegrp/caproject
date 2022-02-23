@@ -48,7 +48,9 @@ def image_uploader(request, thread_list):
         # Traverse all uploaded images and create PropertyImage instances using a reference to property id contained in threadlist
         for i in request.FILES.getlist('image'):
             try:
-                image = PropertyImage.objects.create_property_image(i, thread_list[2])
+                image_index = 2
+                image = PropertyImage.objects.create_property_image(i, thread_list[image_index])
+                image_index+=1
             except Exception as e:
                 print(e)
     except Exception as e:
