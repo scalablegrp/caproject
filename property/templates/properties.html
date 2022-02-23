@@ -37,19 +37,22 @@
                 </div>
             {% endif %}
             <h5>{{ property.address.house_number}} {{property.address.street}},</h5>
-            <h5>{{ property.address.town }}</h5>
-            <h5>{{ property.address.county }}</h5>
-            <h5>{{ property.address.postcode }}</h5>
-            <h5>Current Highest Bid: {{property.price}}</h5>
+            <h5>{{ property.address.town }},</h5>
+            <h5>{{ property.address.county }},</h5>
+            <h5>{{ property.address.postcode }},</h5>
+            <h5>Current Highest Bid: €{{property.price}}</h5>
             <h5>Remaining Bid Time</h5>
             <h5 class = "remaining_bid_time">{{property.specific_time_details}}</h5>
-            <!--Remaining_bid_time_seconds class is hidden. Its use is to pass the remaining bidding seconds to javascript function-->
-            <h5 class = "remaining_bid_time_seconds">{{property.calc_remaining_bid_time}}</h5>
-            <!--Form for submitting a bid-->
-            <form class = "bid_form">
-                <input type="number" name="bid_amount" id="bid_amount" step = ".01" min = '{{ property.price }}' onload = "bidTimer()">
-                <input type="submit" value="Place Bid" class = "btn btn-success btn-sm">
-            </form>
+            <!--Only display remaining bid time and bid form if ime reains for the bid)-->
+            {% if property.calc_remaining_bid_time > 0 %}
+                <!--Remaining_bid_time_seconds class is hidden. Its use is to pass the remaining bidding seconds to javascript function-->
+                <h5 class = "remaining_bid_time_seconds">{{property.calc_remaining_bid_time}}</h5>
+                <form class = "bid_form" action="{% url 'bid:place_bid' property.id %}" method = "POST">
+                    {% csrf_token %}
+                    <input type="number" name="bid_amount" id="bid_amount" step = ".01" min = '{{ property.price }}' onload = "bidTimer()">
+                    <input type="submit" value="Place Bid" class = "btn btn-success btn-sm">
+                </form>
+            {% endif %}
             <!--Anchor tag to view additiional property details-->
             <span class = "button_wrap">
                 <a class="btn btn-primary btn-sm" href="{% url 'property:view_property' property.id %}"><i class="fas fa-eye"></i>More Info</a>

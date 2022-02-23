@@ -5,11 +5,7 @@ $( document ).ready(function() {
     $(".propertyCard").each(function() {
         let timerContainer = $(this.querySelector(".remaining_bid_time_seconds"));
         let timerOutput = $(this.querySelector(".remaining_bid_time"))
-        // Display the remaining bid time after 1 second so user does not see millisecond timing value
-        // setTimeout(function () {
-        //     timerContainer.css('visibility', 'visible');
-        //   }, 1000)
-        // Only adjust bid value if bid is still ongoing
+        let bidForm = $(this.querySelector(".bid_form"))
         if($(this.querySelector(".remaining_bid_time")).html() != "Bid End") {
             let currentTracker = timerContainer.html();
             //Every second update the timer value
@@ -26,6 +22,11 @@ $( document ).ready(function() {
                 // Subtract mins from secondTracker
                 secondTracker -= mins * 60 || 0;
                 timerOutput.html(`${days} day(s), ${hours} hour(s), ${mins} min(s), ${secondTracker} second(s)`);
+                //If the second tracker reaches 0 remove the bid form and remaining bid time details
+                if(currentTracker < 0) {
+                    bidForm.remove();
+                    timerOutput.html('Bid End');
+                }
              }, 1000)
         }
     })
