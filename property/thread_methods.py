@@ -1,4 +1,4 @@
-from .models import Address, BuildYear, PropertyImage
+from .models import Address, BuildYear, PropertyImage, Property, Status, PropertyType
 from django.conf import settings
 
 def address_creator(request, thread_list):
@@ -30,12 +30,28 @@ def build_year_creator(request, thread_list):
     except Exception as e:
         print(e)
 
+def property_creator(request, thread_list):
+    try:
+        # Initilize a property, save it to db and put its id in thread_list argument for reference in S3 image path
+        property = Property.objects.create_property(
+            request.POST.get('description'), request.POST.get('price'), request.POST.get('footage'), request.POST.get('bathroom_amount'), 
+            request.POST.get('bedroom_amount'), request.POST.get('bid_end'), request.user, PropertyType.objects.get(pk = request.POST.get('property_type')), 
+            BuildYear.objects.get(pk = thread_list[1]), Status.objects.get(status = 'Active Bid'), Address.objects.get(pk = thread_list[0])
+        )
+        thread_list.append(property.id)      
+    except Exception as e:
+        print(e)
+
 def image_uploader(request, thread_list):
     # Upload the image to S3 and instantiate PropertyImage. Id put into threadlist to retrieve instance for assigning property when saved
     try:
-        # Traverse all uploaded images and create PropertyImage instances 
+        # Traverse all uploaded images and create PropertyImage instances using a reference to property id contained in threadlist
         for i in request.FILES.getlist('image'):
-            image = PropertyImage.objects.create_property_image(i)
-            thread_list.append(image.id)    # Thread list to keep a reference of image id's 
+            try:
+                image_index = 2
+                image = PropertyImage.objects.create_property_image(i, thread_list[image_index])
+                image_index+=1
+            except Exception as e:
+                print(e)
     except Exception as e:
         print(e)

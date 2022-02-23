@@ -97,17 +97,25 @@ class Property(models.Model):
 
 # ImageManager will allow PropertyImage instances to be initiated using constructor
 class ImageManager(models.Manager):
-    def create_property_image(self, image):
+    def create_property_image(self, image, property_id):
         try:
             image = self.create(
-                image = image, property = None
+                image = image, property = Property.objects.get(pk=property_id)
             )
             image.save()
-            return image
         except Exception as e:
             print(e)
 
+# This function will be used to assign uploaded image paths based on their corresponding property id
+def image_upload_path(instance, file_name):
+    try:
+        return f"properties/property{instance.property.id}/{file_name}"
+    except Exception as e:
+        print(e)
+
 class PropertyImage(models.Model):
-    image = models.FileField(upload_to='property/')
+    image = models.FileField(upload_to=image_upload_path)   # image will be stored in path of properties/propertyid/filename
     property = models.ForeignKey(Property, on_delete = models.CASCADE, null = True)
     objects = ImageManager() # Image Manager object allows constructor to be utilised for creating a property
+
+

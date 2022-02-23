@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'home',
     'user_auth',
     'property',
+    'bid',
 ]
 
 MIDDLEWARE = [
@@ -157,4 +158,4 @@ if os.path.exists("env.py"):
     AWS_SECRET_ACCESS_KEY = env_variables.get_aws_secret_key()
     AWS_STORAGE_BUCKET_NAME = env_variables.get_bucket_name()
     IMAGE_BUCKET_URL = env_variables.get_instrument_image_url() 
-    PROPERTY_IMAGE_PATH = f"https://{IMAGE_BUCKET_URL}/" 
+    
