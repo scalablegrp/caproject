@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required
 from .models import Address, PropertyImage, PropertyType, BuildYear, Property, Status
-from .thread_methods import address_creator, build_year_creator, property_creator, image_uploader
+from .thread_methods import address_creator, build_year_creator, property_creator, image_uploader, sns_topic_creator
 from django.contrib import messages
 import threading
 from django.conf import settings
@@ -21,10 +21,16 @@ def property_form(request):
             address_creation_thread.start()
             build_year_thread.start()
             property_creation_thread.start()
+            #Check if user wants to receive notifications on bids
+            if request.POST.get('trackBid') == 'true':
+                sns_topic_thread = threading.Thread(target = sns_topic_creator(request, thread_list))
+                sns_topic_thread.start()
             image_upload.start()
             address_creation_thread.join()
             build_year_thread.join()
             property_creation_thread.join()
+            if request.POST.get('trackBid') == 'true':
+                sns_topic_thread.join()
             image_upload.join()
             messages.success(request, "Property Listing Created")
         except Exception as e:

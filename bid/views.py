@@ -3,6 +3,7 @@ from django.db import transaction
 from property.models import Property
 from .models import Bid
 from django.contrib import messages
+from .sns_utils import sns
 
 # Create your views here.
 
@@ -18,6 +19,9 @@ def place_bid(request, property_id):
             # Django select_for update method will lock property price until function finishes (Optimistic locking)
             Property.objects.select_for_update(of = ('price')).filter(pk = property_id)
             with transaction.atomic():
+                user_email = request.user.email
+                sns.topic_subscribe(f"BidNotificationForPropertyId{property_id}", user_email)
+                print("I am called")
                 # Check if the bidder already has a bid on the property
                 if Bid.objects.filter(property=property).filter(user = request.user):
                     # Get the users existing bid and update with new bid value
@@ -32,6 +36,13 @@ def place_bid(request, property_id):
                     # If the bidder doesn't already have a bid for the property instantiate the Bid class
                     try:
                         Bid.objects.create_bid(property, request.user, bid_amount)
+                        # Bidder will not be signed up to sns topic if they haven't already created a bid
+
+                        # try:
+                        #     sns.topic_subscribe(f"BidNotificationForPropertyId{property_id}", user_email)
+                        # except Exception as e:
+                        #     print(e)
+                        #     return
                     except Exception as e:
                         print(e)
                         return

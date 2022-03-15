@@ -154,8 +154,8 @@ STATICFILES_DIRS = [
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # S3 Details Retrieved from environment variables
 if os.path.exists("env.py"):
-    AWS_ACCESS_KEY_ID = env_variables.get_aws_access_key()
-    AWS_SECRET_ACCESS_KEY = env_variables.get_aws_secret_key()
+    AWS_ACCESS_KEY_ID = env_variables.get_aws_access_key("")
+    AWS_SECRET_ACCESS_KEY = env_variables.get_aws_secret_key("")
     AWS_STORAGE_BUCKET_NAME = env_variables.get_bucket_name()
     IMAGE_BUCKET_URL = env_variables.get_instrument_image_url() 
     
