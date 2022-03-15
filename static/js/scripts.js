@@ -1,6 +1,10 @@
-//alert("This alert shows that the js file is linked to base.html")
+//Regular expressions to ensure forms can only be submitted using values based on regular expression
+const lettersNumbersAndSpacesOnlyRegex = new RegExp("[a-zA-Z1-9]$");
+const numberOnlyRegularExpression = new RegExp("[0-9]"); //Ensure only numbers can be used
+const fullAndDecimelNumbersOnlyRegex = new RegExp("[0-9]")
+
 //jQuery
-$( document ).ready(function() {
+$(document).ready(function() {
     // For each property card calculate remaining time for bidding
     $(".propertyCard").each(function() {
         let timerContainer = $(this.querySelector(".remaining_bid_time_seconds"));
@@ -29,6 +33,36 @@ $( document ).ready(function() {
                 }
              }, 1000)
         }
+    });
+
+    // Perform form validation using regular expression on the property form
+    $("#propertyForm").on("submit", function(event) {
+        //Check if user wants to receive bidding notifications
+        trackBid = $("input[name= 'trackBid']");
+        if(confirm("Would you like to receive notifications for bids made on this property?\nok=yes, cancel=no")) {
+            trackBid.val(true);
+        } else {
+            trackBid.val(false);
+        }
+        console.log(`Bid track = ${trackBid.val()}`)
+        let houseNumber = $("input[name = 'house_number']");
+        let street = $("input[name = 'street']");
+        let town = $("input[name = 'town']");
+        let postCode = $("input[name = 'post_code']");
+        let buildYear = $("input[name = 'build_year']");
+        let price = $("input[name = 'price']");
+        let footage = $("input[name = 'footage']");
+        let bathRoomAmount = $("input[name = 'bathroom_amount']");
+        let bedroomAmount = $("input[name = 'bedroom_amount']");
+        let description = $('textarea')
+        console.log(description.val());
+        // Regex checkers for form input values
+        if(lettersNumbersAndSpacesOnlyRegex.test(houseNumber.val()) && lettersNumbersAndSpacesOnlyRegex.test(street.val()) && lettersNumbersAndSpacesOnlyRegex.test(town.val()) 
+            && lettersNumbersAndSpacesOnlyRegex.test(postCode.val()) && (numberOnlyRegularExpression.test(buildYear.val()) && buildYear.val().length == 4) 
+            && numberOnlyRegularExpression.test(price.val()) && numberOnlyRegularExpression.test(footage.val()) && numberOnlyRegularExpression.test(bathRoomAmount.val()) 
+            && numberOnlyRegularExpression.test(bedroomAmount.val()))  {
+                console.log("Everything matches Regex")
+            }
     })
 });
 

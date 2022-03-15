@@ -1,4 +1,5 @@
 from .models import Address, BuildYear, PropertyImage, Property, Status, PropertyType
+from bid.sns_utils import sns
 from django.conf import settings
 
 def address_creator(request, thread_list):
@@ -41,6 +42,16 @@ def property_creator(request, thread_list):
         thread_list.append(property.id)      
     except Exception as e:
         print(e)
+
+def sns_topic_creator(request, thread_list):
+    # Try to create a sns topic for the property
+    try:
+        user_email = request.user.email
+        # The created property will always be index 2
+        sns.topic_subscribe(f"BidNotificationForPropertyId{thread_list[2]}", user_email)
+    except Exception as e:
+        print(e)   
+
 
 def image_uploader(request, thread_list):
     # Upload the image to S3 and instantiate PropertyImage. Id put into threadlist to retrieve instance for assigning property when saved
