@@ -43,14 +43,17 @@ def property_creator(request, thread_list):
     except Exception as e:
         print(e)
 
-def sns_topic_creator(request, thread_list):
+
+def sns_topic_creator(request, thread_list, topic_status):
     # Try to create a sns topic for the property
     try:
         user_email = request.user.email
         # The created property will always be index 2
         sns.topic_subscribe(f"BidNotificationForPropertyId{thread_list[2]}", user_email)
+        topic_status[0] = True
     except Exception as e:
-        print(e)   
+        topic_status[0] = False
+        print(e)
 
 
 def image_uploader(request, thread_list):

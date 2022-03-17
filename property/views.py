@@ -21,18 +21,27 @@ def property_form(request):
             address_creation_thread.start()
             build_year_thread.start()
             property_creation_thread.start()
+            topic_status = ['topic_status']  # List passed to thread to track user notification status 
             #Check if user wants to receive notifications on bids
             if request.POST.get('trackBid') == 'true':
-                sns_topic_thread = threading.Thread(target = sns_topic_creator(request, thread_list))
+                # If the correct aws keys arent provided the topic will not be created, thread parameter value will be adjusted to True if successful
+                sns_topic_thread = threading.Thread(target = sns_topic_creator(request, thread_list, topic_status))
                 sns_topic_thread.start()
             image_upload.start()
             address_creation_thread.join()
             build_year_thread.join()
             property_creation_thread.join()
+            image_upload.join()
             if request.POST.get('trackBid') == 'true':
                 sns_topic_thread.join()
-            image_upload.join()
-            messages.success(request, "Property Listing Created")
+            # If a sns topic was created inform the user on its status
+            if topic_status[0] == True:
+                messages.success(request, "Property listing created. You will receive notifications anytime a bid is made")
+            elif topic_status[0] == False:
+                messages.error(request, "Property Listing created but an issue caused an error in receiving bidding notification has occured")
+            else:
+                # User may not have opted to receive notifications
+                messages.success(request, "Property Listing Created")
         except Exception as e:
             print(e)
             messages.error(request, "Unable to create property")
@@ -50,7 +59,7 @@ def view_properties(request):
         return render(request, "properties.html", {'properties': properties, 'bucket': settings.IMAGE_BUCKET_URL})
     except:
         messages.error(request, "Unable to retrieve property listings")
-        return render(request, "properties.html")
+        return render(request, "error.html")
 
 # View a specific property
 def view_property(request, property_id):

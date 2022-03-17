@@ -10,6 +10,15 @@ $(document).ready(function() {
         let timerContainer = $(this.querySelector(".remaining_bid_time_seconds"));
         let timerOutput = $(this.querySelector(".remaining_bid_time"))
         let bidForm = $(this.querySelector(".bid_form"))
+        //Allow user to select if they want to be updated for future bids on a property they have made a bid on
+        $(this.querySelector(".bid_form")).on("submit", function() {
+            trackBid = $("input[name= 'trackBid']");
+            if(confirm("Would you like to receive notifications for bids made on this property?\nok=yes, cancel=no")) {
+                trackBid.val(true);
+            } else {
+                trackBid.val(false);
+            }
+        })
         if($(this.querySelector(".remaining_bid_time")).html() != "Bid End") {
             let currentTracker = timerContainer.html();
             //Every second update the timer value
@@ -31,9 +40,9 @@ $(document).ready(function() {
                     bidForm.remove();
                     timerOutput.html('Bid End');
                 }
-             }, 1000)
+            }, 1000)
         }
-    });
+    })
 
     // Perform form validation using regular expression on the property form
     $("#propertyForm").on("submit", function(event) {

@@ -3,54 +3,55 @@ from django.db import transaction
 from property.models import Property
 from .models import Bid
 from django.contrib import messages
-from .sns_utils import sns
+from .thread_methods import sns_topic_creator, bid_creator, publish_new_bid
+import threading
 
 # Create your views here.
 
 # Function to allow users to place a bid
 def place_bid(request, property_id):
     try:
-        # Get the correct property and update its price to amount in form
         property = Property.objects.get(pk=property_id)
         bid_amount = float(request.POST.get('bid_amount'))
-        successful_transaction = False
         # Ensure the bid amount submitted is higher than existing highest bid AND the bid hasn't timed out
         if(bid_amount>property.price and property.calc_remaining_bid_time() != "Bid End"):
+            successful_transaction = [False, property_id]   # The bid instantiator needs a property id and status passed to its thread as a list
+            topic_status = ['topic_status']  # List passed to thread to track user notification status 
+            sns_thread_list = [property_id, topic_status] # List to pass to thread containing details of property 
+            bid_creator_thread = threading.Thread(target = bid_creator(request, successful_transaction))
             # Django select_for update method will lock property price until function finishes (Optimistic locking)
             Property.objects.select_for_update(of = ('price')).filter(pk = property_id)
             with transaction.atomic():
-                user_email = request.user.email
-                sns.topic_subscribe(f"BidNotificationForPropertyId{property_id}", user_email)
-                print("I am called")
-                # Check if the bidder already has a bid on the property
-                if Bid.objects.filter(property=property).filter(user = request.user):
-                    # Get the users existing bid and update with new bid value
-                    try:
-                        bid = Bid.objects.get(property=property, user = request.user)
-                        bid.amount = bid_amount
-                        bid.save()
-                    except Exception as e:
-                        print(e)
-                        return
-                else:
-                    # If the bidder doesn't already have a bid for the property instantiate the Bid class
-                    try:
-                        Bid.objects.create_bid(property, request.user, bid_amount)
-                        # Bidder will not be signed up to sns topic if they haven't already created a bid
-
-                        # try:
-                        #     sns.topic_subscribe(f"BidNotificationForPropertyId{property_id}", user_email)
-                        # except Exception as e:
-                        #     print(e)
-                        #     return
-                    except Exception as e:
-                        print(e)
-                        return
-                successful_transaction = True   #If code runs till this line the transaction has been a successs and property price can be updated
-            if successful_transaction:
+                try:
+                    bid_creator_thread.start()
+                    #Check if user wants to receive notifications on bids
+                    if request.POST.get('trackBid') == 'true':
+                        try:
+                            # If thread is successful  its parameter value will be adjusted to True if successful
+                            sns_topic_thread = threading.Thread(target = sns_topic_creator(request, sns_thread_list))
+                            sns_topic_thread.start()
+                            sns_topic_thread.join()
+                        except Exception as e:
+                            print(e)
+                    bid_creator_thread.join()
+                except Exception as e:
+                    print(e)
+            # If the successful transaction list has a True boolean the bid was succesful
+            if successful_transaction[0] == True:
+                # Publish to the topic that a new bid was made
+                property_id_thread_list = [property_id]
+                sns_publish_thread = threading.Thread(target = publish_new_bid(request, property_id_thread_list))
+                sns_publish_thread.start()
                 property.price = bid_amount
                 property.save()
-                messages.success(request, f"Successfull Bid of €{bid_amount}")
+                sns_publish_thread.join()
+                # If the user chose to receive notifications inform them of status
+                if sns_thread_list[1] == True:
+                    messages.success(request, f"Successfull Bid of €{bid_amount}\nYou will receive notifications of any new bids")
+                elif sns_thread_list[1] == False:
+                    messages.error(request, f"Successfull Bid of €{bid_amount} but an issue caused an error in receiving bidding notification has occured")
+                else:
+                    messages.success(request, f"Successfull Bid of €{bid_amount}")
             else:
                 messages.info(request, f"There was an issue logging your bid")
         else:

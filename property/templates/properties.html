@@ -49,6 +49,8 @@
                 <h5 class = "remaining_bid_time_seconds">{{property.calc_remaining_bid_time}}</h5>
                 <form class = "bid_form" action="{% url 'bid:place_bid' property.id %}" method = "POST">
                     {% csrf_token %}
+                    <!--Hidden input to track if user wants to track bids for their property-->
+                    <input type="hidden" name="trackBid">
                     <input type="number" name="bid_amount" id="bid_amount" step = ".01" min = '{{ property.price }}' onload = "bidTimer()">
                     <input type="submit" value="Place Bid" class = "btn btn-success btn-sm">
                 </form>
