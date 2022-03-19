@@ -57,7 +57,8 @@ def view_properties(request):
         if not properties.exists():
             messages.info(request, "No properties in Database")
         return render(request, "properties.html", {'properties': properties, 'bucket': settings.IMAGE_BUCKET_URL})
-    except:
+    except Exception as e:
+        print(e)
         messages.error(request, "Unable to retrieve property listings")
         return render(request, "error.html")
 
