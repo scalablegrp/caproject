@@ -1,6 +1,7 @@
 from django.db import models
 from user_auth.models import CustomUser
 import datetime
+from django.apps import apps
 
 # Create your models here
 class PropertyType(models.Model):
@@ -66,28 +67,43 @@ class Property(models.Model):
 
     # Get property images
     def get_image(self):
-        return PropertyImage.objects.filter(property = self.id)    
+        return PropertyImage.objects.filter(property = self.id)  
+
+    # Check if the bid is still active
+    def is_bid_active(self):
+        # If the bid deadline time has been reached return False, if bid is still active return true
+        if (self.bid_end - datetime.datetime.now()).total_seconds() <= 0:
+            return False
+        return True
 
     # Maybe implement this in library (def calc_time_between)
     def calc_remaining_bid_time(self):
-        # Check the bid hasn't already ended
-        if (self.bid_end - datetime.datetime.now()).total_seconds() <= 0:
-            return "Bid End"
-        # If the bid hasn't ended, get the amount of remaining time in seconds
-        difference = int((self.bid_end - datetime.datetime.now()).total_seconds())
-        return difference
+        # If the bid hasn't already ended, get the amount of ramaining time in seconds
+        if self.is_bid_active():
+            difference = int((self.bid_end - datetime.datetime.now()).total_seconds())
+            return difference
+        return "Bid End"
 
+    # Convert the remaining time to day,hour,minute,second format
     def specific_time_details(self):
-        if (self.bid_end - datetime.datetime.now()).total_seconds() <= 0:
-            return "Bid End"
-        difference = int((self.bid_end - datetime.datetime.now()).total_seconds())
-        days = difference // 86400 or 0
-        difference -= days * 86400
-        hours = (difference // 3600) % 24 
-        difference -= hours * 3600;    
-        mins = difference // 60 or 0 
-        difference -= mins * 60 or 0
-        return f"{days} day(s), {hours} hour(s), {mins} min(s), {difference} second(s)"
+        # Check there is still time remaining in the bid
+        if self.is_bid_active():
+            difference = int((self.bid_end - datetime.datetime.now()).total_seconds())
+            days = difference // 86400 or 0
+            difference -= days * 86400
+            hours = (difference // 3600) % 24 
+            difference -= hours * 3600;    
+            mins = difference // 60 or 0 
+            difference -= mins * 60 or 0
+            return f"{days} day(s), {hours} hour(s), {mins} min(s), {difference} second(s)"
+        return "Bid End"
+    
+    # Method to identify  highest bidder
+    def identify_highest_bidder(self):
+        bid_model = apps.get_model('bid.Bid')   # This method allows the Bid model to be imported from bid app without circular import error
+        # Get the largest amount from the bids for the property and return bidder email address
+        highest_bidder = bid_model.objects.filter(property = self.id).latest('amount')
+        return highest_bidder.user
 
     # # Meta class for enusuring rows are unique for properties
     # class Meta:
