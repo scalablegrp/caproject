@@ -73,20 +73,16 @@
 						</a>
 					</li>
 				<!--if user is logged in, display heading to logout otherwise display headings to login and register-->
-				{% if user.is_authenticated %}
+				{% if status == 1  %}
 				<li class="nav-item">
-					<a class="nav-link" href="{% url 'logout' %}">
+					<a class="nav-link" href=https://scalable-cloud.auth.us-east-1.amazoncognito.com/logout?client_id=7pgh9fn1rqfggabn8i7aju8l4c&logout_uri=http://localhost:8080/thank-you">
 						<i class="fas fa-sign-out-alt"></i>Logout</a>
 				</li>
-				{% else %}
+				{% elif status == 0 %}
 				<li class="nav-item">
-					<a class="nav-link" href="{% url 'login_form' %}">
+					<a class="nav-link" href="https://scalable-cloud.auth.us-east-1.amazoncognito.com/login?client_id=7pgh9fn1rqfggabn8i7aju8l4c&response_type=code&scope=aws.cognito.signin.user.admin+email+openid&redirect_uri=http://localhost:8080/">
 						<i class="fas fa-sign-in-alt"></i>
-						Login</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{% url 'registration_form' %}">
-						<i class="fas fa-user-plus"></i>Register</a>
+						Register/Login</a>
 				</li>
 				{% endif %}
 			</ul>
