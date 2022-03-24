@@ -15,9 +15,8 @@ def place_bid(request, property_id):
         bid_amount = float(request.POST.get('bid_amount'))
         # Ensure the bid amount submitted is higher than existing highest bid AND the bid hasn't timed out
         if(bid_amount>property.price and property.calc_remaining_bid_time() != "Bid End"):
-            successful_transaction = [False, property_id]   # The bid instantiator needs a property id and status passed to its thread as a list
-            topic_status = ['topic_status']  # List passed to thread to track user notification status 
-            sns_thread_list = [property_id, topic_status] # List to pass to thread containing details of property 
+            successful_transaction = [False, property_id]   # The bid instantiator needs a property id and status passed to its thread as a listus 
+            sns_thread_list = [property_id, 'topic_status'] # List to pass to thread containing details of property 
             bid_creator_thread = threading.Thread(target = bid_creator(request, successful_transaction))
             # Django select_for update method will lock property price until function finishes (Optimistic locking)
             Property.objects.select_for_update(of = ('price')).filter(pk = property_id)
@@ -39,17 +38,18 @@ def place_bid(request, property_id):
             # If the successful transaction list has a True boolean the bid was succesful
             if successful_transaction[0] == True:
                 # Publish to the topic that a new bid was made
-                property_id_thread_list = [property_id]
+                property_id_thread_list = [property_id, False]
                 sns_publish_thread = threading.Thread(target = publish_new_bid(request, property_id_thread_list))
                 sns_publish_thread.start()
                 property.price = bid_amount
                 property.save()
                 sns_publish_thread.join()
                 # If the user chose to receive notifications inform them of status
-                if sns_thread_list[1] == True:
-                    messages.success(request, f"Successfull Bid of €{bid_amount}\nYou will receive notifications of any new bids")
-                elif sns_thread_list[1] == False:
-                    messages.error(request, f"Successfull Bid of €{bid_amount} but an issue caused an error in receiving bidding notification has occured")
+                if sns_thread_list[1] != 'topic_status':
+                    if property_id_thread_list[1] == True:
+                        messages.success(request, f"Successfull Bid of €{bid_amount}\nAn email requesting confirmation for receiving bidding notifications has been sent to your email address")
+                    elif property_id_thread_list[1] == False:
+                        messages.error(request, f"Successfull Bid of €{bid_amount} but an issue caused an error in receiving bidding notification has occured")
                 else:
                     messages.success(request, f"Successfull Bid of €{bid_amount}")
             else:

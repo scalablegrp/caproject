@@ -43,8 +43,11 @@ def publish_new_bid(request, property_id):
         property = Property.objects.get(pk=property_id[0])
         sns.publish_new_bid(f"BidNotificationForPropertyId{property_id[0]}", 
                             f"There has just been a new bid of €{request.POST.get('bid_amount')} on the property at:\n{property.address.house_number} {property.address.street},\n{property.address.town},\n{property.address.county}")
+        # Index 1 at property_id list argument is a False boolean. Adjust boolean to True if successful publish
+        property_id[1] = True
     except Exception as e:
-        print(e)
+        property_id[1] = False
+        print(f"Test here: \n{e}")
     
 
 

@@ -48,30 +48,6 @@
 			</ul>
 			<!--Navbar elements on right-->
 			<ul class="navbar-nav ml-auto">
-				<!-- {% if user.is_authenticated%}
-				If the user is a logged in staff member, display a dropdown with admin functions, otherwise dispaly a shopping cart
-				{% if user.is_staff %} -->
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="">View Bids</a>
-                            <a class="dropdown-item" href="">View Orders</a>
-							<a class="dropdown-item" href="">Add Product Type</a>
-						</div>
-					</li>
-				<!--{% else %}-->
-				<!-- {% endif %}
-				{% endif %} -->
-					<li class="nav-item">
-						<a class="nav-link" href="">
-							<i class="fa fa-shopping-cart"></i>Cart
-							<!--If quantity in cart is greater than 0 show amount
-                            {% if product_count > 0 %}
-                            <sup class="badge badge-warning">{{ product_count }}</sup>
-                            {% endif %}
-                            -->
-						</a>
-					</li>
 				<!--if user is logged in, display heading to logout otherwise display headings to login and register-->
 				{% if user.is_authenticated %}
 				<li class="nav-item">
@@ -85,8 +61,8 @@
 						Login</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="{% url 'registration_form' %}">
-						<i class="fas fa-user-plus"></i>Register</a>
+					<a class="nav-link" href="https://scalable-cloud.auth.us-east-1.amazoncognito.com/login?client_id=7pgh9fn1rqfggabn8i7aju8l4c&response_type=code&scope=aws.cognito.signin.user.admin+email+openid&redirect_uri=http://localhost:8080/">
+						<i class="fas fa-sign-in-alt"></i>Register/Login</a>
 				</li>
 				{% endif %}
 			</ul>
