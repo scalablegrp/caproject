@@ -2,7 +2,6 @@ from django.db import models
 from property.models import Property
 from user_auth.models import CustomUser
 
-
 # Create your models here.
 
 # BidManager will allow Bid instances to be initiated using constructor
@@ -21,7 +20,5 @@ class Bid(models.Model):
     class Meta:
         managed = True
         unique_together = [['property', 'user']]
-
-
 
 

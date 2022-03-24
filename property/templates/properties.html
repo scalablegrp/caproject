@@ -43,22 +43,15 @@
             <h5>Current Highest Bid: €{{property.price}}</h5>
             <h5>Remaining Bid Time</h5>
             <h5 class = "remaining_bid_time">{{property.specific_time_details}}</h5>
-            <!--Only display remaining bid time and bid form if time reains for the bid)-->
-            {% if property.is_bid_active %}
+            <!--Only display remaining bid time and bid form if ime reains for the bid)-->
+            {% if property.calc_remaining_bid_time > 0 %}
                 <!--Remaining_bid_time_seconds class is hidden. Its use is to pass the remaining bidding seconds to javascript function-->
                 <h5 class = "remaining_bid_time_seconds">{{property.calc_remaining_bid_time}}</h5>
                 <form class = "bid_form" action="{% url 'bid:place_bid' property.id %}" method = "POST">
                     {% csrf_token %}
-                    <!--Hidden input to track if user wants to track bids for their property-->
-                    <input type="hidden" name="trackBid">
                     <input type="number" name="bid_amount" id="bid_amount" step = ".01" min = '{{ property.price }}' onload = "bidTimer()">
                     <input type="submit" value="Place Bid" class = "btn btn-success btn-sm">
                 </form>
-            {% else %}
-                <!--If the bid has ended check if the logged in user is the highest bidder-->
-                {% if user.is_authenticated and property.identify_highest_bidder == user %}
-                    <button class = "btn btn-success">Pay €{{property.price}}</button>
-                {% endif %}
             {% endif %}
             <!--Anchor tag to view additiional property details-->
             <span class = "button_wrap">

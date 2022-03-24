@@ -10,69 +10,6 @@ body {
     margin-bottom: .5em;
 }
 
-/*ERROR PAGE*/
-.errorWrap {
-	position:absolute;
-	top:25%;
-	width:100%;
-	padding:1em;
-	text-align:center;
-}
-
-.errorWrap i {
-    display:inline-block;
-	color:orange;
-	font-size:12em;
-	margin: 0 .3em;
-}
-
-.errorWrap h1{
-	padding:2em 0;
-    text-align: center;
-	display:inline-block;
-	color:red;
-}
-
-
-
-
-/*PROPERTY ADD FORM*/
-#propertyForm {
-    background-color:yellow;
-    border:.1em solid black;
-    border-radius: 1em;
-    padding:1em;
-}
-#propertyForm .row {
-    margin-bottom: 1em;
-}
-
-#propertyForm legend {
-    width:auto;
-} /*This allows each form fieldset legend to overlay the fieldset border*/
-
-#propertyForm fieldset {
-    border:1px solid black;
-    padding:1em;
-    height:100%;
-}
-
-#propertyForm input,
-#propertyForm .bootstrap-select {
-    width:100%;
-    clear: both;
-}
-
-.propertyDescription {
-    width:100%;
-    height:8em;
-}
-
-.buttonWrap {
-    text-align: center;
-}
-
-
 /*PAGE FOR VIEWING PROPERTY LISTINGS*/
 .propertyCard {
     padding:1em;

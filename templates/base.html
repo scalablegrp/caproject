@@ -12,7 +12,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{% block page_title %}{% endblock %}</title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer"
+	/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 	<link rel="stylesheet" href="{% static 'css/styles.css' %}">
@@ -73,20 +74,16 @@
 						</a>
 					</li>
 				<!--if user is logged in, display heading to logout otherwise display headings to login and register-->
-				{% if user.is_authenticated %}
+				{% if status == 1 %}
 				<li class="nav-item">
-					<a class="nav-link" href="{% url 'logout' %}">
+					<a class="nav-link" href="https://scalable-cloud.auth.us-east-1.amazoncognito.com/logout?client_id=7pgh9fn1rqfggabn8i7aju8l4c&logout_uri=http://localhost:8080/thank-you">
 						<i class="fas fa-sign-out-alt"></i>Logout</a>
 				</li>
-				{% else %}
+				{% elif status == 0 %}
 				<li class="nav-item">
-					<a class="nav-link" href="{% url 'login_form' %}">
+					<a class="nav-link" href="https://scalable-cloud.auth.us-east-1.amazoncognito.com/login?client_id=7pgh9fn1rqfggabn8i7aju8l4c&response_type=code&scope=aws.cognito.signin.user.admin+email+openid&redirect_uri=http://localhost:8080/">
 						<i class="fas fa-sign-in-alt"></i>
-						Login</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{% url 'registration_form' %}">
-						<i class="fas fa-user-plus"></i>Register</a>
+						Register/Login</a>
 				</li>
 				{% endif %}
 			</ul>
