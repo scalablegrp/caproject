@@ -56,11 +56,13 @@ def view_properties(request):
         properties = Property.objects.all()
         if not properties.exists():
             messages.info(request, "No properties in Database")
-        return render(request, "properties.html", {'properties': properties, 'bucket': settings.IMAGE_BUCKET_URL})
+        return render(request, "properties.html", {'properties': properties})
     except Exception as e:
         print(e)
         messages.error(request, "Unable to retrieve property listings")
         return render(request, "error.html")
+
+
 
 # View a specific property
 def view_property(request, property_id):

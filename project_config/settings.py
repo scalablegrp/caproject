@@ -24,17 +24,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # If an env file exists retrieve the secret key from it
-if os.path.exists("env.py"):
-    print("Using secret key contained in env file")
-    SECRET_KEY = env_variables.get_django_secret()
-else:
-    print("Unable to retrieve django secret key from env file")
-    SECRET_KEY = 'unabletoretrievesecretkeyfromenvfile'
+print("Unable to retrieve django secret key from env file")
+SECRET_KEY = 'unabletoretrievesecretkeyfromenvfile'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -91,19 +87,13 @@ if os.path.exists("env.py"):
     DATABASES = {
         'default':  dj_database_url.parse(env_variables.get_db_url())
     }
-# else:
-#     try:
-#         print("Using hosted db")
-#         DATABASES = {
-#             'default':  dj_database_url.parse(os.environ.get('db_url'))
-#         }
-#     except:
-#         DATABASES = {
-#             'default': {
-#                'ENGINE': 'django.db.backends.sqlite3',
-#                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#             }
-#         }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+                }
+    }
 
 # Set the custom user model as the authentication model
 AUTH_USER_MODEL = "user_auth.CustomUser"
