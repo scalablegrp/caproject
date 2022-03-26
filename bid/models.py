@@ -1,6 +1,6 @@
 from django.db import models
 from property.models import Property
-from user_auth.models import CustomUser
+
 
 
 # Create your models here.
@@ -14,7 +14,7 @@ class BidManager(models.Manager):
 class Bid(models.Model):
     # Django doesn't support composite keys so unique_together in Meta class ensures no duplicate rows for property and user attributes
     property = models.ForeignKey(Property, null=False, on_delete=models.CASCADE)
-    user = models.ForeignKey(CustomUser, null=False, on_delete=models.CASCADE)
+    user = models.CharField(max_length = 60)
     amount = models.FloatField()
     objects = BidManager()   # BuildYearManager object allows constructor to be utilised for creating a bid
 

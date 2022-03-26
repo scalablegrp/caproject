@@ -36,7 +36,7 @@ def property_creator(request, thread_list):
         # Initilize a property, save it to db and put its id in thread_list argument for reference in S3 image path
         property = Property.objects.create_property(
             request.POST.get('description'), request.POST.get('price'), request.POST.get('footage'), request.POST.get('bathroom_amount'), 
-            request.POST.get('bedroom_amount'), request.POST.get('bid_end'), request.user, PropertyType.objects.get(pk = request.POST.get('property_type')), 
+            request.POST.get('bedroom_amount'), request.POST.get('bid_end'), request.session['cognito_details']['email'], PropertyType.objects.get(pk = request.POST.get('property_type')), 
             BuildYear.objects.get(pk = thread_list[1]), Status.objects.get(status = 'Active Bid'), Address.objects.get(pk = thread_list[0])
         )
         thread_list.append(property.id)      
@@ -47,9 +47,8 @@ def property_creator(request, thread_list):
 def sns_topic_creator(request, thread_list, topic_status):
     # Try to create a sns topic for the property
     try:
-        user_email = request.user.email
         # The created property will always be index 2
-        sns.topic_subscribe(f"BidNotificationForPropertyId{thread_list[2]}", user_email)
+        sns.topic_subscribe(f"BidNotificationForPropertyId{thread_list[2]}", request.session['cognito_details']['email'])
         topic_status[0] = True
     except Exception as e:
         topic_status[0] = False

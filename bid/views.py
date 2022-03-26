@@ -10,6 +10,10 @@ import threading
 
 # Function to allow users to place a bid
 def place_bid(request, property_id):
+    # Requires a logged in user, Auth using Cognito, if 'cognito_details' in session user is logged in
+    if len(request.session.get('cognito_details', {})) == 0:
+        messages.info(request, "You need to login/register to bid")
+        return render(request, "error.html")
     try:
         property = Property.objects.get(pk=property_id)
         bid_amount = float(request.POST.get('bid_amount'))

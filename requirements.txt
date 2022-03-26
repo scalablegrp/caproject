@@ -29,3 +29,5 @@ typed-ast==1.5.2
 typing_extensions==4.0.1
 urllib3==1.26.8
 wrapt==1.13.3
+requests
+python-jose

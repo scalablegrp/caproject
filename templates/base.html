@@ -49,20 +49,16 @@
 			<!--Navbar elements on right-->
 			<ul class="navbar-nav ml-auto">
 				<!--if user is logged in, display heading to logout otherwise display headings to login and register-->
-				{% if user.is_authenticated %}
+				{% if request.session.cognito_details %}
 				<li class="nav-item">
 					<a class="nav-link" href="{% url 'logout' %}">
 						<i class="fas fa-sign-out-alt"></i>Logout</a>
 				</li>
 				{% else %}
 				<li class="nav-item">
-					<a class="nav-link" href="{% url 'login_form' %}">
+					<a class="nav-link" href="https://scalable-ca.auth.us-east-1.amazoncognito.com/login?client_id=i8dnfjh2d06hhp8qg2ri55seg&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://127.0.0.1:8000">
 						<i class="fas fa-sign-in-alt"></i>
-						Login</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="https://scalable-cloud.auth.us-east-1.amazoncognito.com/login?client_id=7pgh9fn1rqfggabn8i7aju8l4c&response_type=code&scope=aws.cognito.signin.user.admin+email+openid&redirect_uri=http://localhost:8080/">
-						<i class="fas fa-sign-in-alt"></i>Register/Login</a>
+						Register/Login</a>
 				</li>
 				{% endif %}
 			</ul>
