@@ -1,5 +1,4 @@
 from django.db import models
-from user_auth.models import CustomUser
 import datetime
 from django.apps import apps
 
@@ -58,7 +57,7 @@ class Property(models.Model):
     bathroom_amount = models.IntegerField()
     bedroom_amount = models.IntegerField()
     bid_end = models.DateTimeField()
-    posted_by = models.ForeignKey(CustomUser, on_delete = models.CASCADE)
+    posted_by = models.CharField(max_length = 60)
     property_type = models.ForeignKey(PropertyType, on_delete = models.CASCADE)
     build_year = models.ForeignKey(BuildYear, on_delete = models.CASCADE)
     status = models.ForeignKey(Status, on_delete = models.CASCADE)

@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'storages',
+    'django_extensions', # this wil lallow secure certficate over localhost
+    'storages', #this will allow use of S3Boto3 storage
     'home',
     'user_auth',
     'property',
@@ -76,6 +77,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # Context Processor to determine if user is logged in on each page
+                'user_auth.contexts.determine_if_logged_in',
             ],
         },
     },
@@ -105,11 +108,11 @@ if os.path.exists("env.py"):
 #             }
 #         }
 
-# Set the custom user model as the authentication model
-AUTH_USER_MODEL = "user_auth.CustomUser"
-AUTHENTICATION_BACKENDS = (
-    "django.contrib.auth.backends.ModelBackend",
-)
+# Set the custom user model as the authentication model (NOT NEEDED AS AWS COGNITO IS TRACKING USER AUTH)
+# AUTH_USER_MODEL = "user_auth.CustomUser"
+# AUTHENTICATION_BACKENDS = (
+#     "django.contrib.auth.backends.ModelBackend",
+# )
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -157,5 +160,6 @@ if os.path.exists("env.py"):
     AWS_ACCESS_KEY_ID = env_variables.get_aws_access_key("")
     AWS_SECRET_ACCESS_KEY = env_variables.get_aws_secret_key("")
     AWS_STORAGE_BUCKET_NAME = env_variables.get_bucket_name()
-    IMAGE_BUCKET_URL = env_variables.get_instrument_image_url() 
+    IMAGE_BUCKET_URL = env_variables.get_s3_url()
+
     

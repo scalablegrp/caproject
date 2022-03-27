@@ -47,13 +47,20 @@
             {% if property.is_bid_active %}
                 <!--Remaining_bid_time_seconds class is hidden. Its use is to pass the remaining bidding seconds to javascript function-->
                 <h5 class = "remaining_bid_time_seconds">{{property.calc_remaining_bid_time}}</h5>
-                <form class = "bid_form" action="{% url 'bid:place_bid' property.id %}" method = "POST">
-                    {% csrf_token %}
-                    <!--Hidden input to track if user wants to track bids for their property-->
-                    <input type="hidden" name="trackBid">
-                    <input type="number" name="bid_amount" id="bid_amount" step = ".01" min = '{{ property.price }}' onload = "bidTimer()">
-                    <input type="submit" value="Place Bid" class = "btn btn-success btn-sm">
-                </form>
+                <!--Only allow user to access bid form if they are logged in-->
+                {% if request.session.cognito_details %}
+                    <form class = "bid_form" action="{% url 'bid:place_bid' property.id %}" method = "POST">
+                        {% csrf_token %}
+                        <!--Hidden input to track if user wants to track bids for their property-->
+                        <input type="hidden" name="trackBid">
+                        <input type="number" name="bid_amount" id="bid_amount" step = ".01" min = '{{ property.price }}' onload = "bidTimer()">
+                        <input type="submit" value="Place Bid" class = "btn btn-success btn-sm">
+                    </form>
+                {% else %}
+                    <span class = "button_wrap">
+                        <a class="btn btn-success btn-sm" href="https://scalable-ca.auth.us-east-1.amazoncognito.com/login?client_id=i8dnfjh2d06hhp8qg2ri55seg&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://127.0.0.1:8000"><i class="fas fa-sign-in-alt"></i>Place Bid</a>
+                    </span>
+                {% endif %}
             {% else %}
                 <!--If the bid has ended check if the logged in user is the highest bidder-->
                 {% if user.is_authenticated and property.identify_highest_bidder == user %}

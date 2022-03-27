@@ -48,39 +48,15 @@
 			</ul>
 			<!--Navbar elements on right-->
 			<ul class="navbar-nav ml-auto">
-				<!-- {% if user.is_authenticated%}
-				If the user is a logged in staff member, display a dropdown with admin functions, otherwise dispaly a shopping cart
-				{% if user.is_staff %} -->
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="">View Bids</a>
-                            <a class="dropdown-item" href="">View Orders</a>
-							<a class="dropdown-item" href="">Add Product Type</a>
-						</div>
-					</li>
-				<!--{% else %}-->
-				<!-- {% endif %}
-				{% endif %} -->
-					<li class="nav-item">
-						<a class="nav-link" href="">
-							<i class="fa fa-shopping-cart"></i>Cart
-							<!--If quantity in cart is greater than 0 show amount
-                            {% if product_count > 0 %}
-                            <sup class="badge badge-warning">{{ product_count }}</sup>
-                            {% endif %}
-                            -->
-						</a>
-					</li>
 				<!--if user is logged in, display heading to logout otherwise display headings to login and register-->
-				{% if status == 1  %}
+				{% if request.session.cognito_details %}
 				<li class="nav-item">
-					<a class="nav-link" href=https://scalable-cloud.auth.us-east-1.amazoncognito.com/logout?client_id=7pgh9fn1rqfggabn8i7aju8l4c&logout_uri=http://localhost:8080/thank-you">
+					<a class="nav-link" href="{% url 'logout' %}">
 						<i class="fas fa-sign-out-alt"></i>Logout</a>
 				</li>
-				{% elif status == 0 %}
+				{% else %}
 				<li class="nav-item">
-					<a class="nav-link" href="https://scalable-cloud.auth.us-east-1.amazoncognito.com/login?client_id=7pgh9fn1rqfggabn8i7aju8l4c&response_type=code&scope=aws.cognito.signin.user.admin+email+openid&redirect_uri=http://localhost:8080/">
+					<a class="nav-link" href="https://scalable-ca.auth.us-east-1.amazoncognito.com/login?client_id=i8dnfjh2d06hhp8qg2ri55seg&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://127.0.0.1:8000">
 						<i class="fas fa-sign-in-alt"></i>
 						Register/Login</a>
 				</li>

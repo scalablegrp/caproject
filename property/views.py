@@ -6,11 +6,15 @@ from django.contrib import messages
 import threading
 from django.conf import settings
 
-# Handler for property form (Requires Logged in User)
-@login_required
+# Handler for property form
 def property_form(request):
+    # Requires a logged in user, Auth using Cognito, if 'cognito_details' in session user is logged in
+    if len(request.session.get('cognito_details', {})) == 0:
+        messages.info(request, "You need to login/register to post a property for sale")
+        return render(request, "error.html")
     # If the form has been submitted
     if request.method == "POST":
+        print("Called")
         thread_list = []    # List created to store instance ids to compensate for threads not able to return instances
         # Try to create an address, build year, property instances and upload image in seperate threads
         try:
