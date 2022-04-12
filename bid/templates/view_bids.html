@@ -7,10 +7,49 @@
     <h1>View Bids</h1>
 </div>
 <div class="container-fluid">
-    <div class="row">
-        {% for bid in bids %}
-            <br>{{ bid.property.address.house_number }}</br>
-        {% endfor %}
-    </div>
+    {% for bid in bids %}
+        <div class="row">
+            House address   : {{ bid.property.address.house_number }},{{ bid.property.address.street }},{{ bid.property.address.town }},{{ bid.property.address.county }}
+        </div>
+        <div class="row">
+            Current highest bidder: {{ bid.property.identify_highest_bidder }}
+        </div>
+        <div class="row">
+            Bidding amount: {{ bid.property.price }}
+        </div>
+        <div class="row">
+            Remaining Bid Time  : {{bid.property.specific_time_details}}
+        </div>
+        <div class="row">
+            Bidding end Date: {{ bid.property.bid_end }}
+        </div>
+        
+        
+        <div class="row">
+            {% if bid.property.identify_highest_bidder == user %}
+                You are the highest bidder
+            {% else %}
+                You are not the highest bidder, Place higher Bid
+                    {% if bid.property.is_bid_active %}
+                        <!--Remaining_bid_time_seconds class is hidden. Its use is to pass the remaining bidding seconds to javascript function-->
+                        <h5 class = "remaining_bid_time_seconds">{{bid.property.calc_remaining_bid_time}}</h5>
+                        <form class = "bid_form" action="{% url 'bid:place_bid' bid.property.id %}" method = "POST">
+                            {% csrf_token %}
+                            <!--Hidden input to track if user wants to track bids for their property-->
+                            <input type="hidden" name="trackBid">
+                            <input type="number" name="bid_amount" id="bid_amount" step = ".01" min = '{{ bid.property.price }}' onload = "bidTimer()">
+                            <input type="submit" value="Place Bid" class = "btn btn-success btn-sm">
+                        </form>
+                    {% else %}
+                        <!--If the bid has ended check if the logged in user is the highest bidder-->
+                        {% if user.is_authenticated and bid.property.identify_highest_bidder == user %}
+                            <button class = "btn btn-success">Pay €{{bid.property.price}}</button>
+                        {% endif %}
+                    {% endif %}
+            {% endif %}
+        </div>
+        <br></br>
+    {% endfor %}
+
 </div>
 {% endblock content %}

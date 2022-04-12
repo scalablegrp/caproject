@@ -1,7 +1,7 @@
 from django.db import models
 from property.models import Property
 from user_auth.models import CustomUser
-
+import datetime
 
 # Create your models here.
 
