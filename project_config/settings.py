@@ -34,7 +34,7 @@ else:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['http://propertybidapp-env.eba-2ighfwma.eu-west-1.elasticbeanstalk.com/*',]
 
 
 # Application definition
