@@ -34,7 +34,7 @@ else:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['http://propertybidapp-env.eba-2ighfwma.eu-west-1.elasticbeanstalk.com/*',]
+ALLOWED_HOSTS = ['*',]
 
 
 # Application definition
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'user_auth',
     'property',
     'bid',
+    'payment',
 ]
 
 MIDDLEWARE = [
@@ -161,5 +162,6 @@ if os.path.exists("env.py"):
     AWS_SECRET_ACCESS_KEY = env_variables.get_aws_secret_key("")
     AWS_STORAGE_BUCKET_NAME = env_variables.get_bucket_name()
     IMAGE_BUCKET_URL = env_variables.get_s3_url()
-
+    STRIPE_PUBLISHABLE_KEY = env_variables.get_stripe_publishable()
+    STRIPE_SECRET_KEY = env_variables.get_stripe_secret()
     

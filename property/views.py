@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Address, PropertyImage, PropertyType, BuildYear, Property, Status
 from .thread_methods import address_creator, build_year_creator, property_creator, image_uploader, sns_topic_creator
 from django.contrib import messages
 import threading
 from django.conf import settings
+from lib_ideas.methods import MyLibMethods
 
 # Handler for property form
 def property_form(request):
@@ -57,8 +58,31 @@ def property_form(request):
 # View all listed properties
 def view_properties(request):
     try:
-        properties = Property.objects.all()
-        if not properties.exists():
+        properties = list(Property.objects.all())
+        # If the request is a post request it identifies the user either wants to sort or filter the properties
+        if request.method == "POST":
+            try:
+                # Determine if the user selected a valid sort/filter option
+                if not (request.POST.get('filter') or request.POST.get('sort_by')):
+                    messages.info(request, "You have tried to filter/sort without selecting any of the options available")
+                else:
+                    # Instantiate the library for including sort functionality
+                     my_lib = MyLibMethods()
+                     if request.POST.get('sort_by') == 'price_low_to_high':
+                        try:
+                            my_lib.sort_by(properties, 0, len(properties)-1, 'price', 'ascending')
+                        except Exception as e:
+                            print(e)
+                     if request.POST.get('sort_by') == 'price_high_to_low':
+                        try:
+                            my_lib.sort_by(properties, 0, len(properties)-1, 'price', 'descending')
+                        except Exception as e:
+                            print(e)
+                # If a user wants to filter, sorting has to be done prior to filtering because of binary sort use
+                # Sort the options based on the submitted forms values
+            except Exception as e:
+                print(e)                 
+        if len(properties) <= 0:
             messages.info(request, "No properties in Database")
         return render(request, "properties.html", {'properties': properties, 'bucket': settings.IMAGE_BUCKET_URL})
     except Exception as e:
