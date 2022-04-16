@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block page_title %}Purchases{% endblock %}
+{% block content %}
+<!--Font awesome icon above house listings-->
+<div class="banner_image">
+    <i class="far fa-eye"></i>
+    <h1>Your Purchases</h1>
+</div>
+<!--If there are puchases list them-->
+<div class="container-fluid">
+    {% if purchases|length > 0 %}
+        {% for purchase in purchases %}
+        <div class="purchase_wrap">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h5>Purchase Date: {{purchase.date}}</h5>
+                    <h5>You Paid: {{purchase.cost}}</h5>
+                    <h5><u>House Address</u></h5>
+                    <h6>{{ purchase.property.address.house_number }} {{ purchase.property.address.street }} </h6>
+                    <h6>{{ purchase.property.address.town }}</h6>
+                    <h6>{{ purchase.property.address.county }}</h6>
+                    <h6>{{ purchase.property.address.postcode }}</h6> 
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <h1>You have not made any purchases yet</h1>
+    {% endif %}
+{% endblock content %}

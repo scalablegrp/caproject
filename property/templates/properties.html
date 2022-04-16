@@ -7,6 +7,22 @@
     <h1>View Listings</h1>
 </div>
 <div class="container-fluid">
+    <!--If there are properties display options allowing user to filter/sort them-->
+    {% if properties|length > 0 %}
+        <div class="row">
+            <form method="POST" class="filterSortProductForm" id="filterSortByForm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <select name="sort_by">
+                        <option selected disabled>Sort By</option>
+                        <option value="price_low_to_high">Current Price (Low to High)</option>
+                        <option value="price_high_to_low">Current Price (High to Low)</option>
+                    </select>
+                    <button type = "submit" class = "btn btn-success btn-small">Go</button>
+                </div>
+            </form>
+        </div>
+    {% endif %}
     <div class="row">
     <!--Create a card for each property-->
     {% for property in properties %}
@@ -62,9 +78,13 @@
                     </span>
                 {% endif %}
             {% else %}
-                <!--If the bid has ended check if the logged in user is the highest bidder-->
-                {% if user.is_authenticated and property.identify_highest_bidder == user %}
-                    <button class = "btn btn-success">Pay €{{property.price}}</button>
+                <!--If the bid has ended check if the logged in user is the highest bidder and the property hasn't already been purchased-->
+                {% if request.session.cognito_details and property.identify_highest_bidder == request.session.cognito_details.email and not property.is_purchased %}
+                    <!--Form action directs to Stripe checkout-->
+                    <form action="{% url 'payment:make_payment' property.id %}"" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class = "btn btn-success">Pay €{{property.price}}</button>
+                    </form>
                 {% endif %}
             {% endif %}
             <!--Anchor tag to view additiional property details-->

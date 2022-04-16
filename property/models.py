@@ -104,6 +104,14 @@ class Property(models.Model):
         highest_bidder = bid_model.objects.filter(property = self.id).latest('amount')
         return highest_bidder.user
 
+    def get_sorting_filter(self, sorting_filter):
+        if sorting_filter == "price":
+            return self.price
+
+    def is_purchased(self):
+        if self.status == Status.objects.get(status = 'Purchased'):
+            return True
+
     # # Meta class for enusuring rows are unique for properties
     # class Meta:
     #     unique_together = [
