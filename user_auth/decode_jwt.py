@@ -18,10 +18,13 @@ import os
 
 if os.path.exists("./env.py"):
     import env as env_variables
-
-region = env_variables.get_aws_region('aws_educate')
-userpool_id = env_variables.get_user_pool_id()
-app_client_id = env_variables.get_client_id()
+    region = env_variables.get_aws_region('aws_educate')
+    userpool_id = env_variables.get_user_pool_id()
+    app_client_id = env_variables.get_client_id()
+else:
+    region = os.environ.get('cognito_region')
+    userpool_id = os.environ.get('userpool_id')
+    app_client_id = os.environ.get('cognito_client_id')
 keys_url = 'https://cognito-idp.{}.amazonaws.com/{}/.well-known/jwks.json'.format(region, userpool_id)
 # instead of re-downloading the public keys every time
 # we download them only on cold start
