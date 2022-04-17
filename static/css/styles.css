@@ -33,9 +33,6 @@ body {
 	color:red;
 }
 
-
-
-
 /*PROPERTY ADD FORM*/
 #propertyForm {
     background-color:yellow;
@@ -100,7 +97,14 @@ body {
     padding:0 1em;
 }
 
-
 .remaining_bid_time_seconds {
     visibility: hidden;
 } /*Hide the remaining bid time in seconds to the user*/
+
+/*Purchase Details*/
+.purchase_wrap {
+    min-width:100%;
+    border:1px solid red;
+    margin:1em 0em;
+    padding:1em;
+}

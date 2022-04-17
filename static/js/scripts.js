@@ -1,6 +1,8 @@
 //Regular expressions to ensure forms can only be submitted using values based on regular expression
+const lettersAndSpacesOnlyRegex = new RegExp("[a-zA-Z ]$");
 const lettersNumbersAndSpacesOnlyRegex = new RegExp("[a-zA-Z1-9]$");
-const numberOnlyRegularExpression = new RegExp("[0-9]"); //Ensure only numbers can be used
+const lettersNumbersSpacesAndSomeSpecialCharactersOnlyRegex = new RegExp("[a-zA-Z1-9?.,''()!\r\n\"]$");  //Allow letters,numbers, ?'".,!() symbols and blank lines,
+const numberOnlyRegularExpression = new RegExp("[0-9]{4}"); // Only allow a 4 length number sequence
 const fullAndDecimelNumbersOnlyRegex = new RegExp("[0-9]")
 
 //jQuery
@@ -53,10 +55,10 @@ $(document).ready(function() {
         } else {
             trackBid.val(false);
         }
-        console.log(`Bid track = ${trackBid.val()}`)
         let houseNumber = $("input[name = 'house_number']");
         let street = $("input[name = 'street']");
         let town = $("input[name = 'town']");
+        let county = $("input[name = 'county']");
         let postCode = $("input[name = 'post_code']");
         let buildYear = $("input[name = 'build_year']");
         let price = $("input[name = 'price']");
@@ -64,14 +66,82 @@ $(document).ready(function() {
         let bathRoomAmount = $("input[name = 'bathroom_amount']");
         let bedroomAmount = $("input[name = 'bedroom_amount']");
         let description = $('textarea')
-        console.log(description.val());
-        // Regex checkers for form input values
-        if(lettersNumbersAndSpacesOnlyRegex.test(houseNumber.val()) && lettersNumbersAndSpacesOnlyRegex.test(street.val()) && lettersNumbersAndSpacesOnlyRegex.test(town.val()) 
-            && lettersNumbersAndSpacesOnlyRegex.test(postCode.val()) && (numberOnlyRegularExpression.test(buildYear.val()) && buildYear.val().length == 4) 
-            && numberOnlyRegularExpression.test(price.val()) && numberOnlyRegularExpression.test(footage.val()) && numberOnlyRegularExpression.test(bathRoomAmount.val()) 
-            && numberOnlyRegularExpression.test(bedroomAmount.val()))  {
-                console.log("Everything matches Regex")
+        let bidEnd = $("input[name = 'bid_end']");
+        // Get the current time to ensure bid end isn't being set as a past date
+        let bidEndDate = new Date(bidEnd.val())
+        let currentDateTime = new Date();
+        // Regex checkers for form input values. If all form inputs match regular expression checks submit the form
+        if(lettersNumbersSpacesAndSomeSpecialCharactersOnlyRegex.test(description.val()) && lettersNumbersAndSpacesOnlyRegex.test(houseNumber.val()) && 
+            lettersNumbersAndSpacesOnlyRegex.test(street.val()) && lettersNumbersAndSpacesOnlyRegex.test(town.val()) && lettersAndSpacesOnlyRegex.test(county.val()) && 
+            lettersNumbersAndSpacesOnlyRegex.test(postCode.val()) && (numberOnlyRegularExpression.test(buildYear.val()) && buildYear.val().length == 4 && 
+            buildYear.val() <= newDate().getFullYear()) && numberOnlyRegularExpression.test(price.val()) && numberOnlyRegularExpression.test(footage.val()) && 
+            numberOnlyRegularExpression.test(bathRoomAmount.val()) && numberOnlyRegularExpression.test(bedroomAmount.val() && currentDateTime < bidEndDate))  {
+                return true;
             }
+        else {
+            // If the form values don't match the regular expression checks prevent the form from being submit
+            event.preventDefault();
+            letterNumbersAndSpacesOnly = "You have entered invalid characters. Letters, numbers and spaces will only be accepted"
+            // Go through each scenario which may fail a regular expression check and provide a message to user. Remove user message if input is adjusted to valid value
+            if (!lettersNumbersAndSpacesOnlyRegex.test(houseNumber.val())) {
+                displayFormError(houseNumber, letterNumbersAndSpacesOnly);
+            } else {
+                removeFormError(houseNumber)
+            }
+            if (!lettersNumbersAndSpacesOnlyRegex.test(street.val())) {
+                displayFormError(street, letterNumbersAndSpacesOnly);
+            } else {
+                removeFormError(street)
+            }
+            if (!lettersNumbersAndSpacesOnlyRegex.test(town.val())) {
+                displayFormError(town, letterNumbersAndSpacesOnly);
+            } else {
+                removeFormError(town)
+            }
+            if (!lettersNumbersAndSpacesOnlyRegex.test(postCode.val())) {
+                displayFormError(postCode, letterNumbersAndSpacesOnly);
+            } else {
+                removeFormError(postCode)
+            }
+            if (!lettersAndSpacesOnlyRegex.test(county.val())) {
+                displayFormError(county, "You have entered invalid characters. Letters and spaces will only be accepted");
+            } else {
+                removeFormError(county)
+            }
+            if (!numberOnlyRegularExpression.test(buildYear.val() || buildYear.val().length != 4 || buildYear.val() > newDate().getFullYear())) {
+                displayFormError(buildYear, "You have entered an invalid year");
+            } else {
+                removeFormError(buildYear)
+            }
+            if (!lettersNumbersSpacesAndSomeSpecialCharactersOnlyRegex.test(description.val())) {
+                displayFormError(description, "You have entered invalid characters. Letters, numbers, spaces and  ?'\".,!() symbols will only be accepted");
+            } else {
+                removeFormError(buildYear)
+            }
+            if(bidEndDate < currentDateTime ) {
+                displayFormError(bidEnd, "You must enter a future date");
+            } else {
+                removeFormError(bidEnd)
+            }
+        }
     })
 });
+
+//Display appropriate error message if property form fails regular expression checks
+function displayFormError(element, errorMessage) {
+	//Avoid error duplication to check if error message is already present
+	if (element.parent().children().last()[0].localName != "p") {
+		let formError = document.createElement("p");
+		formError.style.color = "red";
+		formError.innerHTML = errorMessage;
+		element.parent().append(formError);
+	}
+}
+
+//Remove error message if shown for a valid form value
+function removeFormError(element) {
+	if (element.parent().children().last()[0].localName == "p") {
+		element.parent().children('p').remove();
+	}
+}
 
