@@ -8,6 +8,8 @@ if os.path.exists("env.py"):
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+SECRET_KEY = os.environ.get('SECRET_KEY')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -115,7 +117,6 @@ STATICFILES_DIRS = [
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # S3 Details Retrieved from environment variables
 if os.path.exists("env.py"):
-    SECRET_KEY = env_variables.get_django_secret()
     AWS_ACCESS_KEY_ID = env_variables.get_aws_access_key("")
     AWS_SECRET_ACCESS_KEY = env_variables.get_aws_secret_key("")
     AWS_STORAGE_BUCKET_NAME = env_variables.get_bucket_name()
@@ -124,7 +125,6 @@ if os.path.exists("env.py"):
     STRIPE_SECRET_KEY = env_variables.get_stripe_secret()
 # Retrieve environment variables from os if .env file not available
 else:
-    SECRET_KEY = os.environ.get('SECRET_KEY')
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
