@@ -113,7 +113,7 @@ if os.path.exists("env.py"):
 # Retrieve environment variables from os if .env file not available
 else:
     SECRET_KEY = os.environ.get('SECRET_KEY')
-    DATABASES = {'default':  dj_database_url.parse(env_variables.get_db_url())}
+    DATABASES = {'default':  dj_database_url.parse('DB')}
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
