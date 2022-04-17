@@ -61,7 +61,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'project_config.wsgi.application'
+WSGI_APPLICATION = 'caproject.wsgi.application'
 
  #If there is a environment variable for the database use that databases details
 if os.path.exists("env.py"):
