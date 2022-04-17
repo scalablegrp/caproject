@@ -61,6 +61,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'project_config.wsgi.application'
 
+ #If there is a environment variable for the database use that databases details
+if os.path.exists("env.py"):
+    DATABASES = {
+        'default':  dj_database_url.parse(env_variables.get_db_url())
+    }
+else:
+    DATABASES = {
+        'default':  dj_database_url.parse(os.environ.get('db_url'))
+    }
+
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -103,7 +114,6 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # S3 Details Retrieved from environment variables
 if os.path.exists("env.py"):
     SECRET_KEY = env_variables.get_django_secret()
-    DATABASES = {'default':  dj_database_url.parse(env_variables.get_db_url())}
     AWS_ACCESS_KEY_ID = env_variables.get_aws_access_key("")
     AWS_SECRET_ACCESS_KEY = env_variables.get_aws_secret_key("")
     AWS_STORAGE_BUCKET_NAME = env_variables.get_bucket_name()
@@ -113,7 +123,6 @@ if os.path.exists("env.py"):
 # Retrieve environment variables from os if .env file not available
 else:
     SECRET_KEY = os.environ.get('SECRET_KEY')
-    DATABASES = {'default':  dj_database_url.parse('DB')}
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
