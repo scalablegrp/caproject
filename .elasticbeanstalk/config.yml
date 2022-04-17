@@ -1,24 +1,24 @@
-branch-defaults:
-  dave:
-    environment: null
-    group_suffix: null
-  main:
-    environment: Propertybidapp-env
-environment-defaults:
-  django-env:
-    branch: null
-    repository: null
-global:
-  application_name: propertyBid
-  branch: null
-  default_ec2_keyname: null
-  default_platform: Python 3.7
-  default_region: eu-west-1
-  include_git_submodules: true
-  instance_profile: null
-  platform_name: null
-  platform_version: null
-  profile: null
-  repository: null
-  sc: git
-  workspace_type: Application
+# branch-defaults:
+#   dave:
+#     environment: Bidbattle-env
+#     group_suffix: null
+#   main:
+#     environment: Propertybidapp-env
+# environment-defaults:
+#   django-env:
+#     branch: null
+#     repository: null
+# global:
+#   application_name: caproject
+#   branch: null
+#   default_ec2_keyname: null
+#   default_platform: Python 3.7
+#   default_region: eu-west-1
+#   include_git_submodules: true
+#   instance_profile: null
+#   platform_name: null
+#   platform_version: null
+#   profile: null
+#   repository: null
+#   sc: git
+#   workspace_type: Application
