@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block page_title %}Listed Properties{% endblock %}
+{% block content %}
+<!--Font awesome icon above house listings-->
+<div class="banner_image">
+    <i class="far fa-eye"></i>
+    <h1>View Bids</h1>
+</div>
+<div class="container-fluid">
+    {% for bid in bids %}
+        <div class="row">
+            House address   : {{ bid.property.address.house_number }},{{ bid.property.address.street }},{{ bid.property.address.town }},{{ bid.property.address.county }}
+        </div>
+        <div class="row">
+            Current highest bidder: {{ bid.property.identify_highest_bidder }}
+        </div>
+        <div class="row">
+            Bidding amount: {{ bid.property.price }}
+        </div>
+        <div class="row">
+            Remaining Bid Time  : {{bid.property.specific_time_details}}
+        </div>
+        <div class="row">
+            Bidding end Date: {{ bid.property.bid_end }}
+        </div>
+        
+        
+        <div class="row">
+            {% if bid.property.identify_highest_bidder == user %}
+                You are the highest bidder
+            {% else %}
+                You are not the highest bidder, Place higher Bid
+                    {% if bid.property.is_bid_active %}
+                        <!--Remaining_bid_time_seconds class is hidden. Its use is to pass the remaining bidding seconds to javascript function-->
+                        <h5 class = "remaining_bid_time_seconds">{{bid.property.calc_remaining_bid_time}}</h5>
+                        <form class = "bid_form" action="{% url 'bid:place_bid' bid.property.id %}" method = "POST">
+                            {% csrf_token %}
+                            <!--Hidden input to track if user wants to track bids for their property-->
+                            <input type="hidden" name="trackBid">
+                            <input type="number" name="bid_amount" id="bid_amount" step = ".01" min = '{{ bid.property.price }}' onload = "bidTimer()">
+                            <input type="submit" value="Place Bid" class = "btn btn-success btn-sm">
+                        </form>
+                    {% else %}
+                        <!--If the bid has ended check if the logged in user is the highest bidder-->
+			{% if request.session.cognito_details %}
+                        	{% if bid.property.identify_highest_bidder == user %}
+                        	    <button class = "btn btn-success">Pay €{{bid.property.price}}</button>
+                        	{% endif %}
+			{% else %}
+				<span class = "button_wrap">
+					 <a class="btn btn-success btn-sm" href="https://scalable-ca.auth.us-east-1.amazoncognito.com/login?client_id=i8dnfjh2d06hhp8qg2ri55seg&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://127.0.0.1:8000"><i class="fas fa-sign-in-alt"></i>Place Bid</a>
+				</span>
+			{% endif %}
+                    {% endif %}
+            {% endif %}
+        </div>
+        <br></br>
+    {% endfor %}
+
+</div>
+{% endblock content %}

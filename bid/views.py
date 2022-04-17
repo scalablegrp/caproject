@@ -63,3 +63,9 @@ def place_bid(request, property_id):
     except Exception as e:
             print(e)
     return redirect('property:view_properties')
+
+# View all created bids 
+def view_bids(request):
+    if request.user.is_authenticated:
+        bids = Bid.objects.filter(user = request.user)
+        return render(request, "view_bids.html",{ 'bids' : bids})
