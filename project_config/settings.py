@@ -20,7 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_extensions', # this wil lallow secure certficate over localhost
+    #'django-extensions', # this wil lallow secure certficate over localhost
     'storages', #this will allow use of S3Boto3 storage
     'home',
     'user_auth',
