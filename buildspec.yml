@@ -6,12 +6,11 @@ phases:
       - apt-get update
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
       - unzip ./sonar-scanner-cli-4.7.0.2747-linux.zip
-      - export PATH=$PATH:./sonar-scanner-4.7.0.2747-linux/bin/
   pre_build:
     commands:
       - pwd
       - ls -l
-      - sudo sonar-scanner -Dsonar.organization=scalablegrp -Dsonar.projectKey=scalablegrp_caproject -Dsonar.sources=.  -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=8a4bd8042604d8a8744f460859fe53bbc -X
+      - sudo ./sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner -Dsonar.organization=scalablegrp -Dsonar.projectKey=scalablegrp_caproject -Dsonar.sources=.  -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=8a4bd8042604d8a8744f460859fe53bbc -X
       - sleep 10
   build:
     commands:
