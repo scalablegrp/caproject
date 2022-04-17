@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - apt-get update
+      - sudo apt-get install openjdk-11-jdk -y
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
+      - unzip ./sonar-scanner-cli-4.7.0.2747-linux.zip
+  pre_build:
+    commands:
+      - pwd
+      - ls -l
+      - echo $JAVA_HOME
+      - sudo ./sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner -Dsonar.organization=scalablegrp -Dsonar.projectKey=scalablegrp_caproject -Dsonar.sources=.  -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=634bf9b67fabdc8514620e1f24acfa037e516955 -X
+      - sleep 10
+  build:
+    commands:
+      - echo Building Project
+      - echo Finished Building

@@ -63,3 +63,12 @@ def place_bid(request, property_id):
     except Exception as e:
             print(e)
     return redirect('property:view_properties')
+
+# View all created bids 
+def view_bids(request):
+    if len(request.session.get('cognito_details', {})) == 0:
+        messages.info(request, "You need to login/register to bid")
+        return render(request, "error.html")
+    else:
+        bids = Bid.objects.filter(user = request.session['cognito_details']['email']))
+        return render(request, "view_bids.html",{ 'bids' : bids})
