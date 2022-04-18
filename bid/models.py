@@ -1,5 +1,15 @@
 from django.db import models
 from property.models import Property
+<<<<<<< HEAD
+=======
+
+# from user_auth.models import CustomUser
+import datetime
+
+
+
+# Create your models here.
+>>>>>>> c06ecfb1a8900bdf07b949f2f88422678195a936
 
 # BidManager will allow Bid instances to be initiated using constructor
 class BidManager(models.Manager):

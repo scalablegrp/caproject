@@ -4,3 +4,7 @@ cert.crt
 cert.key
 lib_ideas
 .env
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

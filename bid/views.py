@@ -28,7 +28,7 @@ def place_bid(request, property_id):
                 try:
                     bid_creator_thread.start()
                     #Check if user wants to receive notifications on bids
-                    create_queue()
+                    queue = create_queue()
                     if request.POST.get('trackBid') == 'true':
                         try:
                             # If thread is successful  its parameter value will be adjusted to True if successful
@@ -44,7 +44,7 @@ def place_bid(request, property_id):
             if successful_transaction[0] == True:
                 # Publish to the topic that a new bid was made
                 property_id_thread_list = [property_id, False]
-                sns_publish_thread = threading.Thread(target = publish_new_bid(request, property_id_thread_list))
+                sns_publish_thread = threading.Thread(target = publish_new_bid(request, property_id_thread_list, queue))
                 sns_publish_thread.start()
                 property.price = bid_amount
                 property.save()
