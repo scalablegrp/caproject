@@ -44,13 +44,14 @@ def bid_creator(request, thread_list):
     except Exception as e:
         print(e)
 
-def publish_new_bid(request, property_id):
+def publish_new_bid(request, property_id, queue):
     try:
         # Get the correct property from property_id argument
-        sqs_message = f"BidNotificationForPropertyId{property_id[0]}"+"##"+f"There has just been a new bid of €{request.POST.get('bid_amount')} on the property at:\n{property.address.house_number} {property.address.street},\n{property.address.town},\n{property.address.county}"
-        queue_url = "https://sqs."+env_variables.get_aws_region("aws_educate")+".amazonaws.com/"+env_variables.get_aws_account_id("aws_educate")+"/BidNotificationQueue"
-        
+        sqs_message = f"BidNotificationForPropertyId{property_id[0]}"+"##"+f"There has just been a new bid of €{request.POST.get('bid_amount')} on the property"
+        # queue_url = "https://sqs."+env_variables.get_aws_region("")+".amazonaws.com/"+env_variables.get_aws_account_id("")+"/BidNotificationQueue"
+        queue_url = queue['QueueUrl']
         sqs_client = queue_client()
+        sqs_client.purge_queue(QueueUrl=queue_url)
         sqs_client.send_message(
             QueueUrl = queue_url,
             MessageBody = sqs_message
@@ -59,10 +60,10 @@ def publish_new_bid(request, property_id):
         response = sqs_client.receive_message(
             QueueUrl = queue_url,
             AttributeNames=['All'],
-            MaxNumberOfMessage=1
+            MaxNumberOfMessages=1
         )
 
-        queue_message = response['Message']
+        queue_message = response['Messages'][0]['Body']
         snsParams = queue_message.split("##")
 
         property = Property.objects.get(pk=property_id[0])
@@ -78,7 +79,7 @@ def create_queue():
     try:
         # Create SQS Queue to send all the messages
         sqs_client = queue_client()
-        queue = sqs_client.create_queue(Name="BidNotificationQueue")
+        queue = sqs_client.create_queue(QueueName="BidNotificationQueue")
         return queue
     except ClientError as e:
         logging.error(e)
@@ -88,9 +89,9 @@ def queue_client():
 
     try:
         # SQS Client
-        sqs_client = boto3.client('sqs', region_name=env_variables.get_aws_region("aws_educate"), aws_access_key_id=env_variables.get_aws_access_key("aws_educate"), 
-                                    aws_secret_access_key=env_variables.get_aws_secret_key("aws_educate"), 
-                                    aws_session_token=env_variables.get_aws_session_token("aws_educate"))
+        sqs_client = boto3.client('sqs', region_name=env_variables.get_aws_region(""), aws_access_key_id=env_variables.get_aws_access_key(""), 
+                                    aws_secret_access_key=env_variables.get_aws_secret_key(""), 
+                                    aws_session_token=env_variables.get_aws_session_token(""))
         return sqs_client
     except ClientError as e:
         logging.error(e)

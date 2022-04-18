@@ -19,7 +19,9 @@ class sns:
     @staticmethod
     def topic_subscribe(topic_name, user_email):
         try:
-            sns_client = boto3.client('sns')
+            sns_client = boto3.client('sns', region_name=env_variables.get_aws_region(""), aws_access_key_id=env_variables.get_aws_access_key(""), 
+                                aws_secret_access_key=env_variables.get_aws_secret_key(""), 
+                                aws_session_token=env_variables.get_aws_session_token(""))
             response = sns_client.create_topic(Name=topic_name)
             topic_arn = response['TopicArn']
             sns_client.subscribe(TopicArn=topic_arn, Protocol = 'email', Endpoint = user_email)
@@ -30,7 +32,9 @@ class sns:
     @staticmethod
     def publish_new_bid(topic_name, message):
         try:
-            sns_client = boto3.client('sns')
+            sns_client = boto3.client('sns', region_name=env_variables.get_aws_region(""), aws_access_key_id=env_variables.get_aws_access_key(""), 
+                                aws_secret_access_key=env_variables.get_aws_secret_key(""), 
+                                aws_session_token=env_variables.get_aws_session_token(""))
             # Try to publish the message
             response = sns_client.create_topic(Name = topic_name)
             topic_arn = response['TopicArn']
