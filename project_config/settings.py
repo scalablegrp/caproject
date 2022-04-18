@@ -117,7 +117,7 @@ STATICFILES_DIRS = [
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # S3 Details Retrieved from environment variables
 if os.path.exists("env.py"):
-    SECRET_KEY = env_variables.get_aws_secret_key
+    SECRET_KEY = env_variables.get_aws_secret_key()
     AWS_ACCESS_KEY_ID = env_variables.get_aws_access_key("")
     AWS_SECRET_ACCESS_KEY = env_variables.get_aws_secret_key("")
     AWS_REGION = env_variables.get_aws_region("")
@@ -127,6 +127,7 @@ if os.path.exists("env.py"):
     STRIPE_SECRET_KEY = env_variables.get_stripe_secret()
 # Retrieve environment variables from os if .env file not available
 else:
+    SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
     AWS_REGION = os.environ.get('AWS_REGION')
