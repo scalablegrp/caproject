@@ -8,7 +8,14 @@ if os.path.exists("env.py"):
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+# Get environment variables from platform
+def get_environ_vars():
+        completed_process = subprocess.run(
+            ['/opt/elasticbeanstalk/bin/get-config', 'environment'],
+            stdout=subprocess.PIPE,
+            text=True,
+            check=True
+        )
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -130,10 +137,10 @@ else:
     SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
     AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
     AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
-    AWS_REGION = os.environ['AWS_REGION']
-    AWS_STORAGE_BUCKET_NAME = os.environ('AWS_STORAGE_BUCKET_NAME')
-    IMAGE_BUCKET_URL = os.environ('IMAGE_BUCKET_URL')
-    STRIPE_PUBLISHABLE_KEY = os.environ('STRIPE_PUBLISHABLE_KEY')
-    STRIPE_SECRET_KEY = os.environ('STRIPE_SECRET_KEY')
+    #AWS_REGION = os.environ['AWS_REGION']
+    AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
+    IMAGE_BUCKET_URL = os.environ['IMAGE_BUCKET_URL']
+    STRIPE_PUBLISHABLE_KEY = os.environ['STRIPE_PUBLISHABLE_KEY']
+    STRIPE_SECRET_KEY = os.environ['STRIPE_SECRET_KEY']
 
     
