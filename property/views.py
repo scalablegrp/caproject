@@ -60,7 +60,7 @@ def property_form(request):
 def view_properties(request):
     try:
         properties = list(Property.objects.all())
-         If the request is a post request it identifies the user either wants to sort or filter the properties
+         #If the request is a post request it identifies the user either wants to sort or filter the properties
          if request.method == "POST":
              try:
                  # Determine if the user selected a valid sort/filter option
