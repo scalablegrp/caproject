@@ -54,3 +54,4 @@ requests
 python-jose
 django-extensions
 stripe
+custom-lib-pkg-scalable-groupca==0.0.1
