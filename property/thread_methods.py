@@ -52,7 +52,7 @@ def sns_topic_creator(request, thread_list, topic_status):
         topic_status[0] = True
     except Exception as e:
         topic_status[0] = False
-        print(f"Test here: \n{e}")
+
 
 
 def image_uploader(request, thread_list):
