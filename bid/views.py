@@ -70,5 +70,5 @@ def view_bids(request):
         messages.info(request, "You need to login/register to bid")
         return render(request, "error.html")
     else:
-        bids = Bid.objects.filter(user = request.session['cognito_details']['email']))
+        bids = Bid.objects.filter(user = request.session['cognito_details']['email'])
         return render(request, "view_bids.html",{ 'bids' : bids})
