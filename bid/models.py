@@ -1,7 +1,11 @@
 from django.db import models
 from property.models import Property
+<<<<<<< HEAD
+
+=======
 # from user_auth.models import CustomUser
 import datetime
+>>>>>>> c8de8d79dead3c3b30104fa32207b01ddb739dde
 
 
 

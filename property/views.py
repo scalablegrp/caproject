@@ -12,7 +12,7 @@ def property_form(request):
     # Requires a logged in user, Auth using Cognito, if 'cognito_details' in session user is logged in
     if len(request.session.get('cognito_details', {})) == 0:
         messages.info(request, "You need to login/register to post a property for sale")
-        return render(request, "error.html")
+        return redirect("https://scalable.auth.us-east-1.amazoncognito.com/login?client_id=6bghvg18tkkiarbqpekpfgij78&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://localhost:8080")
     # If the form has been submitted
     if request.method == "POST":
         print("Called")
@@ -95,5 +95,5 @@ def view_property(request, property_id):
     #s3_bucket_url =  settings.INSTRUMENT_IMAGE_URL
     # Retrieve the selected properties details
     property = Property.objects.get(pk=property_id)
-    return render(request, "property.html", {'property': property})
+    return render(request, "property.html", {'property': property, 'bucket': settings.IMAGE_BUCKET_URL})
 

@@ -3,3 +3,4 @@ venv
 cert.crt 
 cert.key
 lib_ideas
+.env

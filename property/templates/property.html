@@ -7,8 +7,65 @@
     <h1>View Property</h1>
 </div>
 <div class="container-fluid">
-    <div class="row">
-        <h1>{{ property.address.house_number}} {{property.address.street}}</h1>
+    <div class="specificPropertyDetails">
+        <div class="row">
+            <div class="col-sm-12 col-md-5">
+                <h1>{{ property.address.house_number}} {{property.address.street}}</h1>
+                <h1>{{ property.address.town }},</h1>
+                <h1>{{ property.address.county }},</h1>
+                <h1>{{ property.address.postcode }},</h1>
+                <h1>Current Highest Bid: €{{property.price}}</h1>
+                <h5>Property Description</h5>
+                <p>{{property.description}}</p>
+                <h5>Remaining Bid Time</h5>
+                <h5 class = "remaining_bid_time">{{property.specific_time_details}}</h5>
+                <!--Only display remaining bid time and bid form if time reains for the bid)-->
+                {% if property.is_bid_active %}
+                    <!--Remaining_bid_time_seconds class is hidden. Its use is to pass the remaining bidding seconds to javascript function-->
+                    <h5 class = "remaining_bid_time_seconds">{{property.calc_remaining_bid_time}}</h5>
+                    <!--Only allow user to access bid form if they are logged in-->
+                    {% if request.session.cognito_details %}
+                        <form class = "bid_form" action="{% url 'bid:place_bid' property.id %}" method = "POST">
+                            {% csrf_token %}
+                            <!--Hidden input to track if user wants to track bids for their property-->
+                            <input type="hidden" name="trackBid">
+                            <input type="number" name="bid_amount" id="bid_amount" step = ".01" min = '{{ property.price }}' onload = "bidTimer()" required>
+                            <input type="submit" value="Place Bid" class = "btn btn-success btn-sm">
+                        </form>
+                    {% else %}
+                        <span class = "button_wrap">
+                            <a class="btn btn-success btn-sm" href="https://scalable.auth.us-east-1.amazoncognito.com/login?client_id=6bghvg18tkkiarbqpekpfgij78&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://localhost:8080"><i class="fas fa-sign-in-alt"></i>Place Bid</a>
+                        </span>
+                    {% endif %}
+                {% else %}
+                    <!--If the bid has ended check if the logged in user is the highest bidder and the property hasn't already been purchased-->
+                    {% if request.session.cognito_details and property.identify_highest_bidder == request.session.cognito_details.email and not property.is_purchased %}
+                        <!--Form action directs to Stripe checkout-->
+                        <form action="{% url 'payment:make_payment' property.id %}"" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class = "btn btn-success">Pay €{{property.price}}</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="col-sm-12 col-md-6">
+                {% if property.get_image %}
+                <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for img in property.get_image %}
+                            {% if forloop.first %}
+                                <div class="carousel-item active">
+                            {% else %}
+                                <div class="carousel-item">
+                            {% endif %}
+                                    <img src="{{bucket}}{{img.image}}">
+                                </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock content %}

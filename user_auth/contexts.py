@@ -1,8 +1,15 @@
 from . import decode_jwt
 import base64
 import requests
+import os
 
-from env import COGNITO_CLIENT_ID, COGNITO_CLIENT_SECRET, COGNITO_REDIRECT_URL, COGNITO_TOKEN_ENDPOINT
+if os.path.exists("env.py"):
+    from env import COGNITO_CLIENT_ID, COGNITO_CLIENT_SECRET, COGNITO_REDIRECT_URL, COGNITO_TOKEN_ENDPOINT
+else:
+    COGNITO_CLIENT_ID =  os.environ.get("COGNITO_CLIENT_ID")
+    COGNITO_CLIENT_SECRET = os.environ.get("COGNITO_CLIENT_SECRET")
+    COGNITO_REDIRECT_URL = os.environ.get("COGNITO_REDIRECT_URL")
+    COGNITO_TOKEN_ENDPOINT = os.environ.get("COGNITO_TOKEN_ENDPOINT")
 
 # Method to retrieve user identifier from cognito if they are logged in
 def determine_if_logged_in(request):
