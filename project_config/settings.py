@@ -72,7 +72,7 @@ if os.path.exists("env.py"):
     }
 else:
     DATABASES = {
-        'default':  dj_database_url.parse(os.environ.get('db_url'))
+        'default':  dj_database_url.parse(os.environ['db_url'])
     }
 
 
@@ -127,13 +127,13 @@ if os.path.exists("env.py"):
     STRIPE_SECRET_KEY = env_variables.get_stripe_secret()
 # Retrieve environment variables from os if .env file not available
 else:
-    SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-    AWS_REGION = os.environ.get('AWS_REGION')
-    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
-    IMAGE_BUCKET_URL = os.environ.get('IMAGE_BUCKET_URL')
-    STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY')
-    STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
+    SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+    AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+    AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+    AWS_REGION = os.environ['AWS_REGION']
+    AWS_STORAGE_BUCKET_NAME = os.environ('AWS_STORAGE_BUCKET_NAME')
+    IMAGE_BUCKET_URL = os.environ('IMAGE_BUCKET_URL')
+    STRIPE_PUBLISHABLE_KEY = os.environ('STRIPE_PUBLISHABLE_KEY')
+    STRIPE_SECRET_KEY = os.environ('STRIPE_SECRET_KEY')
 
     
