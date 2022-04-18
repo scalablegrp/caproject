@@ -41,3 +41,4 @@ class sns:
         except ClientError as e:
             logging.error(e)
             print("An isue occured in the message publish process")
+
