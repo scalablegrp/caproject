@@ -3,7 +3,7 @@ from django.db import transaction
 from property.models import Property
 from .models import Bid
 from django.contrib import messages
-from .thread_methods import sns_topic_creator, bid_creator, publish_new_bid
+from .thread_methods import create_queue, sns_topic_creator, bid_creator, publish_new_bid
 import threading
 
 # Create your views here.
@@ -28,6 +28,7 @@ def place_bid(request, property_id):
                 try:
                     bid_creator_thread.start()
                     #Check if user wants to receive notifications on bids
+                    create_queue()
                     if request.POST.get('trackBid') == 'true':
                         try:
                             # If thread is successful  its parameter value will be adjusted to True if successful
@@ -70,5 +71,5 @@ def view_bids(request):
         messages.info(request, "You need to login/register to bid")
         return render(request, "error.html")
     else:
-        bids = Bid.objects.filter(user = request.session['cognito_details']['email']))
+        bids = Bid.objects.filter(user = request.session['cognito_details']['email'])
         return render(request, "view_bids.html",{ 'bids' : bids})
