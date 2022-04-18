@@ -108,3 +108,17 @@ body {
     margin:1em 0em;
     padding:1em;
 }
+
+/*Specific house pages*/
+.specificPropertyDetails {
+    padding:1em;
+    margin: 0 0 1em 0;
+    border:solid red .1em;
+    border-radius: 1em;
+}
+
+.specificPropertyDetails img {
+    height: 30em;
+    width:100%;
+    padding: 2em 0;  
+}

@@ -42,14 +42,6 @@
                                 </div>
                         {% endfor %}
                     </div>
-                    <!-- <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a> -->
                 </div>
             {% endif %}
             <h5>{{ property.address.house_number}} {{property.address.street}},</h5>
@@ -74,7 +66,7 @@
                     </form>
                 {% else %}
                     <span class = "button_wrap">
-                        <a class="btn btn-success btn-sm" href="https://scalable-ca.auth.us-east-1.amazoncognito.com/login?client_id=i8dnfjh2d06hhp8qg2ri55seg&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://127.0.0.1:8000"><i class="fas fa-sign-in-alt"></i>Place Bid</a>
+                        <a class="btn btn-success btn-sm" href="https://scalable.auth.us-east-1.amazoncognito.com/login?client_id=6bghvg18tkkiarbqpekpfgij78&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://localhost:8080"><i class="fas fa-sign-in-alt"></i>Place Bid</a>
                     </span>
                 {% endif %}
             {% else %}
