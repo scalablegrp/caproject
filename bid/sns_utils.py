@@ -11,7 +11,7 @@ if os.path.exists("env.py"):
     aws_session_token=env_variables.get_aws_session_token("")
 else:
     from django.conf import settings
-
+    region_name=settings.AWS_REGION
     aws_access_key_id=settings.AWS_ACCESS_KEY_ID
     aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
 
@@ -41,4 +41,3 @@ class sns:
         except ClientError as e:
             logging.error(e)
             print("An isue occured in the message publish process")
-
