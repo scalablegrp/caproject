@@ -29,7 +29,7 @@
                             {% csrf_token %}
                             <!--Hidden input to track if user wants to track bids for their property-->
                             <input type="hidden" name="trackBid">
-                            <input type="number" name="bid_amount" id="bid_amount" step = ".01" min = '{{ property.price }}' onload = "bidTimer()">
+                            <input type="number" name="bid_amount" id="bid_amount" step = ".01" min = '{{ property.price }}' onload = "bidTimer()" required>
                             <input type="submit" value="Place Bid" class = "btn btn-success btn-sm">
                         </form>
                     {% else %}

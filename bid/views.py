@@ -51,7 +51,7 @@ def place_bid(request, property_id):
                 # If the user chose to receive notifications inform them of status
                 if sns_thread_list[1] != 'topic_status':
                     if property_id_thread_list[1] == True:
-                        messages.success(request, f"Successfull Bid of €{bid_amount}\nAn email requesting confirmation for receiving bidding notifications has been sent to your email address")
+                        messages.success(request, f"Successfull Bid of €{bid_amount}\nPlease check your email address for notifications")
                     elif property_id_thread_list[1] == False:
                         messages.error(request, f"Successfull Bid of €{bid_amount} but an issue caused an error in receiving bidding notification has occured")
                 else:
